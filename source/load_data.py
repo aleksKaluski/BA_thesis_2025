@@ -49,6 +49,7 @@ def prepare_data_frame(input_path: str, nlp: spacy.Language):
             chunkize = 1000000
 
             print(f"Tagging {input_file_name} text with spacy has started.")
+            # we fix here
             for index, record in enumerate(obj):
                 # print(record)
                 clean_data = []
