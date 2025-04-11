@@ -48,11 +48,8 @@ def prepare_data_frame(input_path: str, nlp: spacy.Language):
             # for making the file smaller (to avoud memory error)
             chunkize = 1000000
 
-            # Convert the iterator to a list to allow indexing
-            records = list(obj)
-
             print(f"Tagging {input_file_name} text with spacy has started.")
-            for index, record in enumerate(records):
+            for index, record in enumerate(obj):
                 # print(record)
                 clean_data = []
 
