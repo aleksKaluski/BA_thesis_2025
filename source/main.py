@@ -20,10 +20,15 @@ from gensim.models import Word2Vec
 
 # required packages: pip install spacy pandas numpy ijson colorama matplotlib seaborn gensim umap-learn tqdm wordcloud scikit-learn
 # python -m spacy download en_core_web_sm
+
+import time
 from memory_profiler import profile
 
 @profile
 def main():
+    timings = {}
+
+
     # change working directory
     os.chdir("C:\BA_thesis\BA_v2_31.03")
 
@@ -34,19 +39,25 @@ def main():
     """ 
     1) load the data
     """
+    start = time.perf_counter()
     nlp = spacy.load("en_core_web_sm")
     ld.load_data(dir_with_corpus_files=input_path,
                  nlp=nlp)
+    timings['load_data'] = time.perf_counter() - start
 
 
     """
     2) create corpus
     """
+    start = time.perf_counter()
     corpus = ld.TxtSubdirsCorpus("files/dfs")
+    timings['create_corpus'] = time.perf_counter() - start
+
 
     """
     3) Train a few models
     """
+    start = time.perf_counter()
     # Parameter grid
     window = [1, 3]
     epochs = [100]
@@ -65,17 +76,22 @@ def main():
         )
         model.save(f"files/models/w{w}e{e}sg{s}v{v}.model")
 
+    timings['train_models'] = time.perf_counter() - start
+
     """
     4) Evaluate models
     """
+    start = time.perf_counter()
     m = ev.compleate_evaluation(dir_with_models='files/models',
                                 ev_file='files/google.txt',
                                 test_words=[('good', 'bad'), ('game', 'theory')])
+    timings['evaluate_models'] = time.perf_counter() - start
 
     """
     5) Reduce dimentions
     """
     # take the best model
+    start = time.perf_counter()
     model_name = m['model']
     best_model = f'files/models/{model_name}'
     model = Word2Vec.load(best_model)
@@ -92,16 +108,21 @@ def main():
     # reduce the dimentions
     df = dm.reduce_dimentionality(vec, df)
 
-
+    timings['reduce_dimensions'] = time.perf_counter() - start
     """
     6) visualize the document distance
     """
+
+    start = time.perf_counter()
     # df = pd.read_pickle("files/df_red.pkl")
     vs.plot_dimentions(df)
+    timings['plot_dimensions'] = time.perf_counter() - start
+
 
     """
     7) cluster the documents
     """
+    start = time.perf_counter()
     data = df[[x for x in df.columns if x.startswith('Dim ')]]
 
     """
@@ -140,16 +161,22 @@ def main():
 
 
     #TODO: Optional add various labels to the dataset and compare them later
-
+    timings['clustering'] = time.perf_counter() - start
 
     """
     8) Plot wordclouds for each cluster
     """
+    start = time.perf_counter()
     wd.divide_and_plot(df, "gmm_labels")
+    timings['wordclouds'] = time.perf_counter() - start
+
 
     with pd.option_context('display.max_rows', 10, 'display.max_columns', None, 'display.width', 500):
         print(df)
 
+    print("\nTIME REPORT")
+    for step, seconds in timings.items():
+        print(f"{step:>20}: {seconds:.2f} s")
+
 if __name__ == '__main__':
-    import cProfile
-    cProfile.run('main()', sort='cumtime')
+    main()
