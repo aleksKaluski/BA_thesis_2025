@@ -49,10 +49,12 @@ def prepare_data_frame(input_path: str, nlp: spacy.Language):
             chunkize = 1000000
 
             print(f"Tagging {input_file_name} text with spacy has started.")
-            # we fix here
+
+            # TODO: fixed here
+
+            texts = []
+            metadata = []
             for index, record in enumerate(obj):
-                # print(record)
-                clean_data = []
 
                 content = record["content"]
                 text = content[1]['values']
@@ -62,19 +64,24 @@ def prepare_data_frame(input_path: str, nlp: spacy.Language):
                 colors = ["red", "blue", "green", "yellow", "purple", "orange"]
                 group = random.choice(colors)
 
-                # tag and clean text
-                clean_text = tag_with_spacy(text[0], nlp)
-                for t in clean_text:
-                    if len(t) > 5:
-                        df2 = pd.DataFrame({
-                            # for now it's a string
-                            "clean_text": [t],
-                            "date": date,
-                            "semantic_id": semantic_id,
-                            'group': group})
-                        df = pd.concat([df, df2])
-                    else:
-                        continue
+                texts.append(text)
+                metadata.append((date, semantic_id, group))
+
+                if len(texts) >= chunkize:
+                    docs = nlp.pipe(texts, batch_size=10, disable=["ner", "parser"])
+                    for doc, (date, semantic_id, group) in zip(docs, metadata):
+                        clean_text = tag_with_spacy(doc)
+                        for t in clean_text:
+                            if len(t) > 5:
+                                df2 = pd.DataFrame({
+                                    # for now it's a string
+                                    "clean_text": [t],
+                                    "date": date,
+                                    "semantic_id": semantic_id,
+                                    'group': group})
+                                df = pd.concat([df, df2])
+                            else:
+                                continue
 
                 # divide df to smaller chunks
                 # Check if it's the last record using the index
@@ -99,8 +106,7 @@ def prepare_data_frame(input_path: str, nlp: spacy.Language):
                                             "group": []})
 
 
-def tag_with_spacy(text: str, nlp: spacy.Language) -> list:
-    doc = nlp(text)
+def tag_with_spacy(doc) -> list:
 
     # keep clean text
     clean_tokens = []

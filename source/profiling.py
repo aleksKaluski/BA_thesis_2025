@@ -28,25 +28,29 @@ os.chdir("C:\BA_thesis\BA_v2_31.03")
 print(f"working directory: {os.getcwd()}")
 input_path = os.getcwd() + '/files/corpus_data'
 
-@profile
+# @profile
 def main():
     nlp = spacy.load("en_core_web_sm")
     ld.load_data(dir_with_corpus_files=input_path,
                  nlp=nlp)
 
 
+
 if __name__ == '__main__':
-    import cProfile
-    import pstats
-    import io
-
-    pr = cProfile.Profile()
-    pr.enable()
+    # import cProfile
+    # import pstats
+    # import io
+    #
+    # pr = cProfile.Profile()
+    # pr.enable()
     main()
-    pr.disable()
-
-    s = io.StringIO()
-    sortby = 'cumtime'
-    ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
-    ps.print_stats(30)
-    print(s.getvalue())
+    df = 'files/dfs/meaning0_prp.pkl'
+    with pd.option_context('display.max_rows', 10, 'display.max_columns', None, 'display.width', 500):
+        print(df)
+    # pr.disable()
+    #
+    # s = io.StringIO()
+    # sortby = 'cumtime'
+    # ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+    # ps.print_stats(30)
+    # print(s.getvalue())
