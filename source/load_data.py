@@ -17,7 +17,7 @@ File for loading data, tagging with spacy and feeding word2vec model.
 """
 
 
-def prepare_data_frame(input_path: str, nlp: spacy.Language):
+def prepare_data_frame(input_path: str, nlp: spacy.Language, chunksize: int = 10):
 
 
     # We take .json file, load it, preprocess and work on that later
@@ -29,24 +29,16 @@ def prepare_data_frame(input_path: str, nlp: spacy.Language):
         folder_path = 'files\dfs'
         input_path = Path(input_path)
         input_file_name = input_path.name
-        print(f'\nLoading data from {input_file_name}')
+        print(f'Loading data from {input_file_name}')
         output_file_name = input_file_name.replace('.json', '')
 
         # for naming convention
         name_number = 0
-
-        # prepare empty df for results
-        df = pd.DataFrame(data={"clean_text": [],
-                                "semantic_id": [],
-                                "date": [],
-                                "group": []})
+        rows = []
 
         # open large json file
         with open(input_path, "rb") as f:
             obj = ijson.items(f, "documents.list.item")
-
-            # for making the file smaller (to avoud memory error)
-            chunkize = 1000000
 
             print(f"Tagging {input_file_name} text with spacy has started.")
 
@@ -54,56 +46,49 @@ def prepare_data_frame(input_path: str, nlp: spacy.Language):
 
             texts = []
             metadata = []
-            for index, record in enumerate(obj):
-
+            for _, record in enumerate(obj):
                 content = record["content"]
-                text = content[1]['values']
-                date = content[2]['values']
-                semantic_id = content[0]['values']
+                text = content[1]['values'][0]
+                date = content[2]['values'][0]
+                semantic_id = content[0]['values'][0]
                 # mock metadata
-                colors = ["red", "blue", "green", "yellow", "purple", "orange"]
+                colors = ['psychology', 'ethics', 'philosphy']
                 group = random.choice(colors)
 
                 texts.append(text)
+                print(len(texts))
                 metadata.append((date, semantic_id, group))
+                print(metadata)
 
-                if len(texts) >= chunkize:
+                if len(texts) < chunksize:
                     docs = nlp.pipe(texts, batch_size=10, disable=["ner", "parser"])
                     for doc, (date, semantic_id, group) in zip(docs, metadata):
                         clean_text = tag_with_spacy(doc)
                         for t in clean_text:
                             if len(t) > 5:
-                                df2 = pd.DataFrame({
-                                    # for now it's a string
-                                    "clean_text": [t],
+                                rows.append({
+                                    "clean_text": t,
                                     "date": date,
                                     "semantic_id": semantic_id,
                                     'group': group})
-                                df = pd.concat([df, df2])
-                            else:
-                                continue
+                    df = pd.DataFrame(rows)
+                    with pd.option_context('display.max_rows', 10, 'display.max_columns', None, 'display.width', 500):
+                        print(df)
+                        print(df.info())
 
-                # divide df to smaller chunks
-                # Check if it's the last record using the index
-                if len(df) > chunkize or index == len(records) - 1:
+
+                if len(texts) >= chunksize:
                     output_file_name = output_file_name + f'{name_number}_prp.pkl'
                     output_path = os.path.join(folder_path, output_file_name)
                     print(f"Tagging done. Saving the file to {output_path} ")
                     print("-"*50)
 
                     # safe the chunk
-                    df.to_pickle(output_path)
-
-                    #TODO: at this point it migth be necessary to convert clean data to a list
-                    # df.clean_text.tolist()
+                    # df.to_pickle(output_path)
+                    with pd.option_context("display.max_colwidth", None):
+                        print(df)
 
                     name_number += 1
-
-                    # reset df
-                    df = pd.DataFrame(data={"clean_text": [],
-                                            "semantic_id": [],
-                                            "date": [],
-                                            "group": []})
 
 
 def tag_with_spacy(doc) -> list:
@@ -135,7 +120,7 @@ def tag_with_spacy(doc) -> list:
     return clean_tokens
 
 
-def load_data(dir_with_corpus_files: str, nlp: spacy.Language):
+def load_data(dir_with_corpus_files: str, nlp: spacy.Language, chunksize: int = 10):
 
     path = Path(dir_with_corpus_files)
     assert os.path.exists(path), f"Provided path {dir_with_corpus_files} does not exist"
@@ -145,7 +130,7 @@ def load_data(dir_with_corpus_files: str, nlp: spacy.Language):
         filename = os.fsdecode(file)
         if filename.endswith(".json"):
             directory = os.path.join(dir_with_corpus_files, filename)
-            prepare_data_frame(directory, nlp)
+            prepare_data_frame(directory, nlp, chunksize)
         else:
             print(f"Provided file {filename} is not json. Skipping the file...")
 

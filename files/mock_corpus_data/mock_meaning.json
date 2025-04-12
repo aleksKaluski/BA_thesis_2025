@@ -1,0 +1,485 @@
+{
+  "labels" : {
+    "selected" : 69,
+    "candidate" : 218,
+    "list" : [
+      {
+        "id" : 17,
+        "text" : "natural language",
+        "display" : "natural language",
+        "score" : 1039.862,
+        "df" : 9,
+        "documents" : [ ]
+      },
+      {
+        "id" : 8,
+        "text" : "fallacy",
+        "display" : "fallacy",
+        "score" : 925.8887,
+        "df" : 2,
+        "documents" : [ ]
+      },
+      {
+        "id" : 15,
+        "text" : "model",
+        "display" : "model",
+        "score" : 818.41736,
+        "df" : 21,
+        "documents" : [ ]
+      },
+      {
+        "id" : 3,
+        "text" : "Wittgenstein",
+        "display" : "Wittgenstein",
+        "score" : 550.62366,
+        "df" : 9,
+        "documents" : [ ]
+      },
+      {
+        "id" : 13,
+        "text" : "know",
+        "display" : "know",
+        "score" : 46.37862,
+        "df" : 15,
+        "documents" : [ ]
+      }
+    ]
+  },
+  "documents" : {
+    "inScope" : 54,
+    "totalMatches" : 54,
+    "labeled" : 53,
+    "fields" : [
+      {
+        "name" : "id",
+        "type" : "text",
+        "id" : true
+      },
+      {
+        "name" : "text",
+        "type" : "text"
+      },
+      {
+        "name" : "date",
+        "type" : "date"
+      },
+      {
+        "name" : "source",
+        "type" : "text"
+      }
+    ],
+    "list" : [
+      {
+        "id" : 438,
+        "content" : [
+          {
+            "name" : "id",
+            "values" : [
+              "254926851"
+            ]
+          },
+          {
+            "name" : "text",
+            "values" : [
+              "Language Models as Inductive Reasoners\n\nInductive reasoning is a core component of human intelligence. In the past research of inductive reasoning within computer science, logic language is used as representations of knowledge (facts and rules, more specifically). However, logic language can cause systematic problems for inductive reasoning such as disability of handling raw input such as natural language, sensitiveness to mislabeled data, and incapacity to handle ambiguous input. To this end, we propose a new task, which is to induce natural language rules from natural language facts, and create a dataset termed DEER containing 1.2k rule-fact pairs for the task, where rules and facts are written in natural language. New automatic metrics are also proposed and analysed for the evaluation of this task. With DEER, we investigate a modern approach for inductive reasoning where we use natural language as representation for knowledge instead of logic language and use pretrained language models as ''reasoners''. Moreover, we provide the first and comprehensive analysis of how well pretrained language models can induce natural language rules from natural language facts. We also propose a new framework drawing insights from philosophy literature for this task, which we show in the experiment section that surpasses baselines in both automatic and human evaluations.\n\n\nIntroduction\nInductive reasoning is to reach to a hypothesis (usually a rule that explains an aspect of the law of nature) based on pieces of evidence (usually observed facts of the world), where the observations can not provide conclusive support to the hypothesis (Salmon 1989). It is ampliative, which means that the hypothesis supports more than mere reformulation of the content of the evidence (Norton 2005). An example is shown in Table 1 that after observing three carnivorous plants each having a trapping structure, one might reach to a hypothesis (rule) that every carnivorous plant has a trapping structure. Inductive reasoning was firstly proposed by Aristotle in the 4th century B.C. in his Posterior Analytics (Aristotle 1994). Since then it is used as a fundamental tool to obtain axioms, and therefore subjects can be developed from these axioms. It is also recognized as a core component of human intelligence (Mercier 2018 Past research works on inductive reasoning within computer science are investigated by Inductive Logic Programming (ILP) (Muggleton and De Raedt 1994). ILP investigates the inductive construction of first-order logic rules from examples and background knowledge (Muggleton and De Raedt 1994). However, ILP uses logic language as representation and uses symbolic algorithms as method, which results in systematic disadvantages (Cropper et al. 2022). Specifically, ILP systems heavily rely on human effort, since it typically assumes that the input has already been preprocessed into symbolic declarative form, otherwise ILP systems cannot handle raw inputs such as natural language and images. In addition, ILP systems are very sensitive to label error and ambiguity in data, since the final induced rules are required to satisfy all input facts, and symbolic systems can not recognize different symbols with the same meaning (e.g. be capable of, has the capability of, be able to).\nTo overcome the challenges above, we present a novel paradigm for inductive reasoning based entirely on natural language, i.e., inducing natural language rules from natural language facts. In particular, we create a first-of-its-kind natural language inductive reasoning dataset named DEER containing 1.2k rule-fact pairs 1 . Specifically, human-written natural language rule sentences are first collected. Based on the collected rules, we then ask human annotators to collect existing natural language texts as facts from the web where each fact can be possibly enough to induce the given rule. With this dataset, we investigate a modern approach to inductive reasoning where both facts and rules are in natural language, and pretrained language models (PLMs) are used as the inductive reasoner to induce natural language rules from natural language facts. Note that the inductive reasoning considered in this paper has several distinctions considered by other reasoning tasks over text (Clark, Tafjord, and Richardson 2020;Bhagavatula et al. 2020;Sinha et al. 2019). We defer a more detailed discussion to section 2.\nWith natural language as representation and PLMs as the reasoner, such an inductive reasoning system can avoid the systematic disadvantages of logic language and symbolic methods. Specifically, with natural language as representation, it can naturally handle raw input as natural language text. In addition, different from symbolic methods, PLMs 1 We will release our code and data after publication Drosera, which is commonly known as the sundews, is one of the largest genera of carnivorous plants, with at least 194 species. The trapping and digestion mechanism of Drosera usually employs two types of glands: stalked glands that secrete sweet mucilage to attract and ensnare insects and enzymes to digest them, and sessile glands that absorb the resulting nutrient soup.\nIf a plant is carnivorous , then it probably has a trapping structure. Table 1: An example of inductive reasoning in DEER dataset. We embolden the words in facts that contain the key information to induce this rule (just to explain the relation between facts and rule, in DEER there's no special word annotations for fact).\ncontain knowledge via pretraining (Davison, Feldman, and Rush 2019) and use embedding for concepts (Mikolov et al. 2013), making it less affected by input errors (Meng et al. 2021) and more robust to paraphrasing.\nBased on the proposed dataset, we study the PLM's ability to induce (generate) natural language rules from natural language facts. Specifically, we analyze the performance of PLMs to induce natural language rules based on different First-Order Logic (Smullyan 1995) rule types and topics (e.g., zoology, botany, history), with varying input facts and PLM model sizes.\nWe also propose a new framework for this task, named chain-of-language-models (CoLM) which is shown in Figure 1. It draws insights from the requirements of rule induction in philosophy literature (Norton 2005). Specifically, CoLM consists of five modules all based on PLMs, where one model proposes rules (rule proposer M1), and the other four models (M2, M3, M4, M5) each classify whether a generated rule satisfies one particular requirement of induction. In our experiments, we find that our framework surpasses the baselines in terms of both automatic and human evaluations.\nTo sum up, our contributions are three-fold. • We propose a new paradigm (task) of inducing natural language rules from natural language facts, which naturally overcomes three systematic disadvantages of past works on inductive reasoning. In particular, we create a first-of-its-kind natural language inductive reasoning dataset DEER containing 1.2k rule-fact pairs, where fact and rule are both written in natural language. New automatic metrics are also proposed for task evaluation, which shows strong consistency with human evaluation. • We provide the first and comprehensive analysis of how well PLMs can induce natural language rules from natural language facts. • Drawing insights from philosophy literature (Norton 2005), we propose a framework for inductive reasoning. Empirically, we show that it surpasses baselines substantially in both automatic and human evaluations.\n\nDefinition of Inductive Reasoning\nAll non-fallacious arguments (an argument consisting of a premise and a conclusion) can be classified as a deductive argument or inductive argument (Flach and Kakas 2000). If the premise can provide conclusive support for the conclusion, which means that if the premises of the argument were all true, it would be impossible for the conclusion of the argument to be false, the argument is called a deductive argument. Similarly, if the premise can only provide partial support for the conclusion, the argument is called inductive argument (Salmon 1989). Conclusions of inductive arguments amplify or go beyond the information found in their premises (Salmon 1989). In this paper, we call the premises as \"fact\", and conclusions as \"rule\". Sinha et al. (2019) proposes CLUTRR dataset, which requires NLU system to make classification on kinship relations between characters in short stories. In many examples of this dataset, a set of facts that can make conclusive support to the target kinship relation is included in background information as input for each target relation, hence from the philosophical definition (Salmon 1989), these examples require to perform deductive reasoning more than inductive reasoning. Misra, Rayz, and Ettinger (2022) investigates using neural networks for the classification of synthetic language of sentences containing an object and a property. In contrast to our work, they only focus on synthetic language and classification problems. In addition, their classification targets are not more general rules, and most are irrelevant facts compared to input facts. One line of research that is related to induction is \"inductive relation induction\" (Teru, Denis, and Hamilton 2020). However, this task focuses on prediction of relation that involves unseen entities, which only involves an induction from specific entities to specific entities, where we focus on the induction from specific entities or individual phenomenons to general knowledge. Yang and Deng (2021) also works on rule induction, but their induced rule in in quasi-natural language but not natural language. The reasoner they adopted is symbolic, while we use neural methods as PLM as inductive reasoner.\n\nInductive Logic Programming\nInductive Logic Programming (ILP) is a subfield of machine learning that uses first-order logic to represent hypotheses and data. It relies on logic language for knowledge representation and reasoning purposes (De Raedt 2010). We propose a new paradigm that can naturally avoid three systematic disadvantages of ILP (Cropper et al. 2022). If and , then .\nIf or , then .\n\nRelation with Other Reasoning Tasks\nThe goal is quite different from deductive reasoning as given facts and rules and reach to new facts (Clark, Tafjord, and Richardson 2020;Liu et al. 2020;Talmor et al. 2020;Porada, Sordoni, and Cheung 2021). Rather, we want to induce rules from facts, where rules are more general statements than given facts. Our goal is also different from past works on abductive reasoning as given facts and finding the casual reasons for the facts (Bhagavatula et al. 2020). Rather, we want to induce rules that generalize over fact itself and possibly can fit other circumstances.\n\nDataset Collection and Our Proposed Evaluation Metrics\nIn this section, we discuss the data collection process for our proposed dataset and our proposed metrics for automatic and human evaluation of the models developed for the task. In general, we propose two datasets. The first one, termed DEER (inDuctive rEasoning with natural languagE Representation), contains 1.2k rule-fact pairs, where rules are written by human annotators in English, and facts are existing English sentences on the web. The other one, termed with DEERLET (classification of inDucEd rulEs with natuRal LanguagE representaTion), including (fact, rule, label0, label1, label2, label3) tuples, where facts are the same as in DEER, rules are generated output from PLMs, and label0/1/2/3 are classification labels describing different aspects of induced rules. Specifically, rules in DEERLET are collected from GPT-J (Wang and Komatsuzaki 2021) using the in-context few-shot setting. We choose this setting because GPT-J is powerful enough (6 billion parameters) so that a proportion of the generated rules are reasonable, but not very accurate so that these generations and their annotations can benefit the models finetuned on it.\nDEER is used as the main dataset for the task, and DEER-LET is used to measure the classification performance of specific capabilities that are required by inductive reasoning according to philosophy literature (Norton 2005).\n\nDataset Collection of DEER\nWe collect 1.2k natural language rule-fact pairs where rules cover 6 topics and 4 common rule types of First-Order Logic (Russell 2010). The 6 topics are zoology, botany, geology, astronomy, history, and physics. The 4 First-Order Logic rule types are implications with universal quantifier (∀x, condition(x) =⇒ conclusion), implications with existential quantifier (∃x, condition(x) =⇒ conclusion), conjunctive implications with universal quantifier (∀x, condition(x) [∧ condition(x)] + =⇒ conclusion), disjunctive implications with universal quantifier (∀x, condition(x) [∨ condition(x)] + =⇒ conclusion). As we hope to collect rules written in natural language, we translate logic rules to natural language using templates as shown in Table 2.\nNatural language rule is firstly written by human experts, then for each rule 6 supporting facts, which consist of 3 long facts and 3 short facts are collected from existing human-written text from commercial search engines and Wikipedia. Long facts are paragraphs collected from different web pages to ensure their difference, and short facts are core sentences selected from corresponding long facts. Each fact itself should contain enough information that is possible to induce the full corresponding rule (an example of short facts for a rule is shown in Table 1).\nSixty percent of the rules in DEER are more general than any of their facts alone at least in one dimension. We describe this process as \"inducing general rules from specific facts\". However, we find that there are many general statements (also referred to as general fact) of a rule on the web. Therefore, for rule induction systems to be able to utilize both \"specific facts\" and \"general facts\", forty percent of the rules in DEER are equipped with general facts. We describe this process as \"inducing general rules from general facts\".\nTo validate the correctness of the DEER dataset, we randomly split DEER data to 4 subsets, and 4 graduate students manually check each of the subsets on whether each fact contains enough information that is possible to induce the given rule and whether the specifc/general labels are correct. The overall correctness of the sampled DEER data is 95.5%.\nThe reason that DEER is not larger is that it requires experts who are familiar enough with inductive reasoning and possesses a relatively high level of science knowledge to annotate.\n\nDataset Collection of DEERLET\nDEERLET is a dataset collected by a human expert in inductive reasoning for classification tasks to evaluate the specific capabilities required by inductive reasoning. It contains 846 tuples with format (fact, rule, label0, label1, label2, label3). Among the tuples, 546 are used for training, 100 for validation, and 200 for testing. Here, facts are directly from DEER, but the corresponding rules are collected from PLMs, and label0 to label3 are classification labels evaluating specific aspects of the generated rules. The reason in DEERLET we collect rules from the generation of PLMs is that we want to avoid human annotation biases (Amidei, Piwek, and Willis 2020).\nWe develop label 0/1/2 based on the requirements of induced rules in philosophy literature (Norton 2005), and develop label 3 based on a NLP aspect of the problem. In particular, label0 measures whether a rule is not in conflict with its fact; Label1 measures whether a rule fits commonsense;  Table 3: Illustration of the weights and recalls in WRecall, one of our proposed automatic evaluation metrics. Here weights reflect the importance of blocks of generated rules.\nLabel2 measures whether a rule is more general than its fact, as inductive reasoning is \"ampliative\", and requires the induced rule to have higher coverage than facts (Norton 2005). Appendix 7 illustrates label2 with more details. Label3 measures whether a rule is not trivial (mostly incomplete sentence or the latter part is a repetition of its former part). Inspired by Obeid and Hoque (2020), label 0/1/2 are annotated on a 3-point scale (true / partially true / false), and label 3 are annotated on a 2-point scale (true / false). More details on annotation of DEERLET are illustrated in Appendix 7.\n\nAdopted and Our Proposed Evaluation Metrics\nHuman Evaluation Metric DEERLET provides human annotations for evaluation of the generated rules from four different aspects. Here we use precision / recall / f1, and the four aspects in DEERLET for human evaluation, Automatic Evaluation Metric For the DEER dataset, as it requires generating rules based on input facts, the first metric we adopt is METEOR (Banerjee and Lavie 2005), which has been widely used for evaluating machine-generated text quality. Appendix 7 compares METEOR and BLEU (Papineni et al. 2002), and illustrates the reasons why METEOR should be a better metric for this task.\nMore specifically, we calculate the averaged METEOR score of the generated rules (after filtering, if a model had a filtering phase). From the observation that even humans still constantly make mistakes on inductive reasoning, we assume any framework for this task might (but not necessarily) contain two phases as generation and filtering to obtain higher performance. However, if with a filtering phase, ME-TEOR only considers the rules that are not filtered.\nIt makes the METEOR metric here a similar metric to \"precision\", as it only calculates the score for rules that are classified as \"true\". As a result, the model might have a low recall in that it might only keep the rule with the highest confidence score, and classify many reasonable good rules as \"false\".\nTo measure the \"recall\" of inductive reasoning models, we propose \"weighted recall (WRecall)\" as the second automatic evaluation metric for this task. The difficulty lies in that we don't have the ground truth labels for generated rules without human evaluation. To calculate WRecall, we make an assumption, which is that the higher METEOR a rule has, generally the higher probability it is a reasonable rule for given facts. This assumption is reasonable given the relatively high correlation coefficient between METEOR and human evaluation shown in Appendix 7. Specifically, as shown in table 3, we can first calculate the METEOR for each generated rule, and sort them based on the value of METEOR. Then we calculate the recall value for each block of generated rules, during which we assume only the rules in that block have \"true\" ground truth label. We also add a linearly changing weight for each block according to their importance. To ensure WRecall is in the range [0,1], WRecall is linearly normalized: Now that we have a METEOR metric that provides a similar measurement of \"precision\", and WRecall for \"recall\", we propose GREEN (GeometRic mEan of METEOR aNd WRecall) to consider METEOR and WRecall together. It is defined as a geometric mean instead of a harmonic mean because METEOR is not in the range [0, 1]. More specifically, GREEN is calculated as: (2) In general, compared with METEOR, GREEN gives a more comprehensive evaluation of the induced rules. Therefore GREEN can be a more favorable metric when the recall is an important factor (e.g., when computational power is limited). However, when the precision of the induced rules is more favored, METEOR should be a more proper metric than GREEN. Appendex 7 discusses more on the importance of each metric for this task.\n\nMethodology\nIn this section, we formally present the task definition and our proposed framework for natural language inductive reasoning. Figure 1 illustrates the general architecture of our proposed approach.\n\nTask Definition\nDEER dataset is used as the dataset for the natural language inductive reasoning task. The data format for DEER is (rule, f act), where both rule and f act are natural language sentences. The goal of the task is to generate reasonable natural language rules given f act, where the rules should be more general and therefore cover more information than f act.\n\nOur Framework\nHypothetical Induction is an important induction type in inductive reasoning (Norton 2005). It can be understood as when people make observations, they might propose a hypothesis as a general rule that can entail the observations. For example, when people observe that the Sun rises and falls every day, they might induce a hypothesis that the Earth is rotating itself, which is more general than the observations as the hypothesis can also help to explain the observable movements of the other Milky Way stars relative to the Earth. Hypothetical induction fits our task well, as in DEER we also want to induce a hypothesis as a more general rule that  Figure 1: Our proposed framework (CoLM) for inductive reasoning with natural language representation task. Rule Proposer is a generative model based on input facts and desired rule template, aiming at generating (a large number of) rule candidates. Deductive consistency evaluator, indiscriminate confirmation handler, generalization checker, and triviality detector are classification models that filter improper rules according to four requirements of the induced rules in inductive reasoning.\ncan entail the facts. We borrow insights from the requirements for the induced rules in hypothetical induction to develop our framework. Specifically, there are mainly three requirements (Salmon 1989;Norton 2005). The first is that a correct hypothesis should be able to entail deductively as many observations as possible. The second is that the hypothesis should follow the laws of nature, as one could always concoct some imaginary hypothesis that is able to explain the observations but violates reality (e.g., the Earth is the center of the Universe so that the Sun orbits around the Earth). In inductive reasoning, the failure to recognize a rule that runs counter to reality is called \"indiscriminate confirmation\". The third is a basic requirement for inductive reasoning, where the hypothesis should be a more general statement than the observations (Appendex 7 illustrates the meaning of \"general\"). We additionally introduce a fourth requirement from NLP aspects since this task uses natural language as knowledge representation. It is that a rule should not be trivial (e.g. incomplete sentence or the latter sub-sentence simply repeats its former sub-sentence). More concretely, we define the requirements for designing our framework as 1) there should be as fewer contradictions between facts and the rule as possible, and 2) the rule should comply with commonsense, 3) the content in facts should be specific statements that are covered by the rule, 4) the rule should not be trivial.\nBased on this, we develop our framework as shown in Figure 1. It consists of five modules, where module 1 (M1) is the rule proposer, module 2 (M2) is the deductive consistency evaluator, module 3 (M3) is the indiscriminate confirmation handler, module 4 (M4) is the generalization checker, and module 5 (M5) is the triviality detector. Specifically, M1 is in charge of the generation of rules. M2, M3, M4, M5 are independent classification models each verifying rules with different requirement. The role of M2/3/4/5 is similar to the verifier developed for deductive reasoning to make more solid reasoning steps (Yang, Deng, and Chen 2022). The independence of M2/3/4/5 makes it possible to run them in parallel.\nIn practice, we implement all five modules with pretrained language models. We call our implementation as CoLM (Chain-of-Language-Models). The goal of M1 is to generate rules based on the input facts and a given rule template. Thus, M1's input contains facts, a rule template, and prompts that demonstrate the rule induction task.M2 and M4's inputs include prompts that explain the rule-fact compatibility, a rule, and a fact; M3 and M5's input includes again prompts that explain the task and a rule, as their targets are independent of fact.\nMore interestingly, although our framework is solely based on the insights from philosophy literature, we also find a mathematical interpretation of this approach. Here, we denote P (A) as the probability indicating whether A is valid for simplicity. Thus, M2 and M4 jointly measure the validness of a fact given the corresponding rule P (f act|rule) ≈ P M 24 (f act|rule) = P M 2 (f act|rule)P M 4 (f act|rule), M3 and M5 directly measure the validness of the rule itself P (rule) ≈ P M 35 (rule) = P M 3 (rule)P M 5 (rule). By using Bayes' rule, we can easily show that the validness of a rule based on the input fact is P (rule|f act) ≈ PM24(f act|rule)PM35(rule). (3) Note that this score is merely a discrimination score and thus different from the generation probability from M1. In other words, the rules proposed by M1 are then selected by M2/3/4/5 in a Bayesian inference fashion.\n\nExperiments\nIn this section, we discuss the evaluation metrics and baselines and then present the main results of our framework.\n\nEvaluation Metrics\nWe carry out evaluations for the overall framework (the rule generation task with DEER) and individual modules for classification using DEERLET. For evaluation of the rule generation of the overall framework, we use METEOR, WRecall, and GREEN as automatic evaluation metrics; And use precision, recall, f1, and the four metrics in DEERLET as human evaluation metrics. WRecall, GREEN, and the four metrics in DEERLET are our newly proposed metrics for inductive reasoning introduced in Section 3.\nFor evaluation of the classification tasks on DEERLET, we use accuracy, f1, and averaged precision as metrics.\n\nBaselines\nWe use a non-neural method and a neural method as baselines for the framework. We call the non-neural baseline  Table 4: Result of our proposed framework and baselines on DEER under in-context few-shot / finetuning setting. The first three metrics are automatic metrics, and the last seven metrics are human evaluation metrics.\n\"R+F\", as it randomly fills the given rule template with sentences or phases from the given fact. The neural baseline we use is the rule proposer itself in Figure 1. We use majority class and TF-IDF (Jones 1972) as baselines for individual modules. The majority class baseline always predicts \"yes\", which is equivalent to not using M2/3/4/5 to filter rules from M1. TF-IDF is another reasonable baseline as the induced rules contain similar contents compared to input facts. In practice, each input factrule pair is assigned a TF-IDF value, and a threshold for correctness (to compare with the TF-IDF value) is tuned on the DEERLET validation set.\n\nMain Results\nAll modules are implemented with GPT-J (Wang and Komatsuzaki 2021), a pre-trained language model with 6 billion parameters. For better analysis, we conduct the experiments in three settings, including zero-shot setting, incontext few-shot setting (Liu et al. 2021;Brown et al. 2020a) and finetuning setting. The only exception is that we do not test finetuning setting on M1 (the only generative module), since we are mainly investigating (out of box) pretrained large language model's ability. However if with finetuning, language model might perform worse on out-of-distribution data and lose their generality for input facts from different topics (Kumar et al. 2022). For this reason we do not implement with T5 (Raffel et al. 2020) but with GPT-J.\nTo save space, we only report the results of in-context few-shot setting and finetuning setting in Table 4 and Table 5, leaving the zero-shot results in the appendix. The thresholds of M2/3/4/5 used in Table 4 and Table 5 are tuned on the DEERLET validation set. More details on setting up thresholds are illustrated in Appendix 7.\nThe results on DEER are shown in Table 4. As expected, the M1 alone outperforms the R+F baseline across the board, indicating that the PLM has some rule induction capability. Augmenting the M1 with some filtering mechanism can reliably improve the generated rule quality further. Lastly, our full model, CoLM, outperforms all baselines justifying the effectiveness of our proposed framework for natural language inductive reasoning.\nThe results on DEERLET are summarized in Table 5. In this experiment, we investigate the classification performance of language models in terms of different aspects required by inductive reasoning, which includes deductive consistency, indiscriminate confirmation, and generalization  / triviality classification. It shows that TF-IDF achieves the same performance with majority class baseline in accuracy and f1 metrics. The reason is that the best thresholds obtained for TF-IDF are all zero, which means that TF-IDF value is not effective for the four tasks. It also shows that the few-shot GPTJ performs worse than the majority class baseline, while finetuned GPTJ steadily performs better.\n\nAnalysis\nIn this section, we investigate the question of \"how well can pretrained language models perform inductive reasoning?\". Specifically, we provide analyses in terms of rule types, topics, variations of input fact, and scales of language models. Except for Table 9, the input used is short fact, 3 fact, full fact. Except for Table 2, the model used is GPT-J. All experiments in this section are based on the in-context few-shot setting, each averaged by 5 runs. Similar trends are also observed in other settings. We report METEOR and GREEN as metrics in this section.\nDifferent Rule Types Table 6 shows the breakdown evaluation of CoLM based on four basic rule types in logic language (Russell 2010   mapping between the logic forms and corresponding natural language templates can be found in Table 2. The table shows that \"there exists , which \" achieves the best performance. It is reasonable, as simply copying the contents of facts to compose a rule will be acceptable for ∃ quantifier in logic. Table 7 shows the performance of CoLM over different topics. CoLM performs much worse on History and Physics than on the other topics. We attribute the reasons to that the rules in history and physics have high variance, demand a higher level of abstraction, and are not very similar to the input facts. For example, in physics, many rules are natural language descriptions of physical laws such as Newton's law of universal gravitation, while the input facts might be the values of gravitational force and mass of specific objects. In contrast, CoLM achieves better performance in Botany. One possible reason is that many rules in botany can be very similar to the input facts (an example is shown in Table 1 Table 9: Analysis of PLM (GPT-J)'s performance (measured in METEOR / GREEN) with different input lengths and whether fact contains enough information. Table 8 shows the result from specific vs general facts. In section 3 we have discussed that a rule induction system would be more widely applicable if it can utilize both specific fact and general fact. In table 8, general facts cases result in lower performance. We think one of the most possible reasons is that in DEER many general facts do not directly contain the content of the corresponding gold rules. For example, general facts can be mottos from philosophers such as Socrates, and rules can be an understandable description of such mottos in natural language rule format.\n\nVariations of Input Facts\nIn table 9, long facts mean the paragraph-level facts in DEER, and short facts mean the core sentence-level facts selected from corresponding paragraph-level facts. The different number of facts indicates the different number of facts given as input that exhibit similar rule patterns (e.g. Lemon tree / orange tree / apple tree can conduct photosynthesis). We consider the number of facts as an important factor because psychological research shows that more facts with similar patterns can help with inductive reasoning (Heit 2000). Missing fact experiments are also conducted, where for each fact we randomly throw the former half or the latter half of the sentences. It is an important setting as it is hard for the input facts to cover all the elements of the desired rule in a realistic scenario. As a result, it might be common that some required pieces of fact are missing. The results indicate that larger number of concise but full facts are beneficial for rule induction, while too many facts with similar patterns might not be helpful. Figure 2 shows the influence of the scale of pre-trained language models (under in-context few-shot setting) on induction. Here, we consider GPT-Neo 125M, GPT-Neo 1.3B, GPT-Neo 2.7B, GPT-J 6B and GPT-NeoX 20B (Wang and Komatsuzaki 2021). The figure shows that generally performance of M1 steadily improves as the scale being larger, and M2/3/4/5 are only helpful since 6B parameters. The only exception is that both M1 and M2/3/4/5 might reach a plateau in 20B parameters. We did not use GPT-3 (Brown et al. 2020b) to analyze scale since M2/3/4/5 need embeddings for prediction, but the API of GPT-3 does not support return full embeddings.\n\nFuture Work and Challenges\nThe new paradigm of using natural language as the representation of knowledge and using PLMs as the inductive reasoner for inductive reasoning opens the possibility of automatically inducing rules on the countless web corpus. On the other hand, there are still remaining challenges in this direction as not all facts can be used to induce rules. Many fact pieces in DEER for a single rule are collected from different places on the web, so that the input contains enough and proper information to induce rules. However, when using the web corpus, it is hard to ensure that input facts contain such information. As a result, it is challenging to reliably obtain high-quality facts that can be utilized to induce rules.\n\nConclusion\nTo overcome the systematic problems of using logic language for inductive reasoning, we propose a new paradigm (task) of inducing natural language rules from natural language facts, and correspondingly propose a dataset DEER and new evaluation metrics for this task. We provide the first and comprehensive analysis of pretrained language models' ability to induce natural language rules from natural language facts. We also propose a new framework drawing insights from philosophy literature, which show in the experiment section that surpasses baselines in both automatic and human evaluations."
+            ]
+          },
+          {
+            "name" : "date",
+            "values" : [
+              "2022-12-21"
+            ]
+          },
+          {
+            "name" : "source",
+            "values" : [
+              "s2orc/valid"
+            ]
+          }
+        ]
+      },
+      {
+        "id" : 2792,
+        "content" : [
+          {
+            "name" : "id",
+            "values" : [
+              "254408501"
+            ]
+          },
+          {
+            "name" : "text",
+            "values" : [
+              "A Comprehensive Survey on Multi-hop Machine Reading Comprehension Datasets and Metrics\n\nMulti-hop Machine reading comprehension is a challenging task with aim of answering a question based on disjoint pieces of information across the different passages. The evaluation metrics and datasets are a vital part of multi-hop MRC because it is not possible to train and evaluate models without them, also, the proposed challenges by datasets often are an important motivation for improving the existing models. Due to increasing attention to this field, it is necessary and worth reviewing them in detail. This study aims to present a comprehensive survey on recent advances in multi-hop MRC evaluation metrics and datasets. In this regard, first, the multi-hop MRC problem definition will be presented, then the evaluation metrics based on their multi-hop aspect will be investigated. Also, 15 multi-hop datasets have been reviewed in detail from 2017 to 2022, and a comprehensive analysis has been prepared at the end. Finally, open issues in this field have been discussed.\n\n\n1-INTRODUCTION\nMachine reading comprehension (MRC) is one of the most important and long-standing topics in Natural Language Processing (NLP). MRC provides a way to evaluate an NLP system's capability for natural language understanding. An MRC task, in brief, refers to the ability of a computer to read and understand natural language context and then find the answer to questions about that context. The emergence of large-scale single-document MRC datasets, such as SQuAD (Rajpurkar et al., 2016), CNN/Daily mail (Hermann et al., 2015), has led to increased attention to this topic and different models have been proposed to address the MRC problem, such as (D. Chen et al., 2016) (Dhingra et al., 2017) (Cui et al., 2017) (Shen et al., 2017).\nHowever, for many of these datasets, it has been found that models don't need to comprehend and reason to answer a question. For example, Khashabi et al (Khashabi et al., 2016) proved that adversarial perturbation in candidate answers has a negative effect on the performance of the QA systems. Similarly, (Jia & Liang, 2017) showed that adding an adversarial sentence to the SQuAD (Rajpurkar et al., 2016) context will drop the result of many existing models. Also (D. Chen et al., 2016) pointed out that the required reasoning in the CNN/Daily Mail (Hermann et al., 2015) dataset is so simple that even a relatively simple algorithm can perform well on this dataset. Min et al. (Min et al., 2018) have shown that 90% of the questions in SQuAD (Rajpurkar et al., 2016), are answerable given only one sentence in a document, which does not involve complex reasoning.\nThe above problems seem to be due to the fact that answering the questions of these datasets doesn't require a deep understanding and reasoning (Khashabi et al., 2018). In other words, these datasets have focused only on answering questions based on a single or few nearby sentences of the context, mostly by matching information in the question and the context (known as single-hop MRC). However, in real-world cases, to answer a question it is required to read and comprehend multiple parts of disjoint evidence to find the valid information. Therefore, there are gaps between single-hop MRC, and real-world cases.\nMulti-Hop Reading Comprehension (MHRC) is a more challenging extension of MRC in which it is needed to properly integrate multiple pieces of evidence and reason over them to correctly answer a question. In contrast to the question in single-hop MRC that can be answered by matching information, the multi-hop MRC task requires answering more complex questions based on a deep understanding of the full information. The reasoning ability is considered the first key in multi-hop MRC (Feng Gao et al., 2021). Figure 1 shows two MRC triples. Figure 1(a) shows a single-hop question from (Rajpurkar et al., 2016) that as you can see this question can be answered with one sentence and mostly used matching information in the question and the context (precipitation, fall). Figure 1(b) shows an example from the WikiHop dataset (Song et al., 2020), where the machine has to gather information from three passages and reason over them to choose the correct answer among candidate answers. Passages contain two relevant facts: \"The Hanging Gardens are in Mumbai\" and \"Mumbai is a city in India\" and also some irrelevant facts, like: \"The Hanging Gardens provide sunset views over the Arabian Sea\" and \"The Arabian Sea is bounded by Pakistan and Iran\". As it is clear, finding the final answer in this kind of scenario is more challenging.\n[ In meteorology, precipitation is any product of the condensation of atmospheric water vapor that falls under gravity. The main forms of precipitation include drizzle, rain, sleet, snow, graupel and hail... Precipitation forms as smaller droplets coalesce via collision with other rain drops or ice crystals within a cloud. Short, intense periods of rain in scattered locations are called \\showers\". The first attempt to improve the simple single-hop MRC dataset happened with emerging of some datasets like TriviaQA (Joshi et al., 2017) and NarrativeQA (Kočisky et al., 2018). These datasets impose more challenges by introducing multiple passages per each question, and also presenting the questions that couldn't be answered with one single sentence. Although they present multiple passages per each question, still the most portion of the question in these datasets could be answered by exactly one sentence or a few nearby sentences within one passage, which means they do not need multi-hop reasoning for most percent of the questions.\nThey are generally known as multi-passage or multi-document dataset that is closer to open-domain Question Answering or retrieving-reading problem, which means models have to focus on retrieving the most related passage and then answer the question based on that instead of reasoning over disjoint information. HotpotQA (Yang et al., 2018a) and WikiHop (Song et al., 2020) can be mentioned as the first and most popular multi-hop datasets which in addition to providing multiple passages per each question, ensure that the question can only be answered by reasoning over disjoint pieces of information. It has been shown that the models with successful results in single-hop MRC datasets have limited success on these datasets .\nRecently, a lot of studies have been focused on different aspect of the multi-hop MRC task. Datasets are a vital part of the MRC task because, without a proper dataset, it is not possible to train and evaluate the models. It can be claimed that the emergence of datasets is the main motivation for much attention and progress in the MRC field after 2016. (Chen, 2018). Usually, the aim of each new dataset is to propose some new challenges that have been neglected by previous datasets, and then the existing models usually can't achieve the acceptable result in new datasets, and are needed to be improved. Therefore, it can be said that the highquality multi-hop datasets promote the multi-hop models as well.\nTo have an accurate view of the growing trend of multi-hop dataset, the multi-hop models have to be considered as well ( Figure   2). Several datasets with more complicated questions than single-hop datasets were introduced in 2017(like TriviaQA (Joshi et al., 2017)). Although they are not considered real multi-hop datasets, but they could attract models in 2018 to pay attention to multihop MRC task. Proposing multi-hop models has been beginning from 2018, but there was a shortage of real multi-hop datasets, so in 2018 more studies focused on creating multi-hop MRC datasets. These datasets made a proper situation to present the multi-hop MRC models, as you can see a significant number of models were been proposed in 2019. The trend of introducing new multi-hop datasets in 2020 to 2022 continued with 7 new datasets. It can be inferred from Figure 2 that whenever a new dataset has been created with new challenges, many studies focus on addressing those challenges, which shows the importance of the datasets. There are some review papers on the MRC task. Liu et al. (Liu et al., 2019) reviewed 85 studies from 2015 to 2018 with a focus on neural network solutions for the MRC problem to investigate the neural network methods in the MRC task. Baradaran, Ghiasi and Amirkhani (Baradaran et al., 2020) presented a survey on the MRC field based on 124 reviewed papers from 2016 to 2018 with a focus on presenting a comprehensive survey on different aspects of machine reading comprehension systems, including their approaches, structures, input/outputs, and research novelties. Thayaparan, Valentino and Freitas (Thayaparan et al., 2020) a systematic review about explainable MRC, from 2014 to 2020 with a focus on the explainable feature of the recent MRC methods. Zhang, Zhao and Wang  presented a survey on the role of contextualized language models (CLMs) on MRC from 2015 to 2019. Bai and Wang (Bai & Daisy Zhe Wang, 2021) presented a survey on textual question answering with a focus on datasets and metrics, they investigate 47 datasets and 8 metrics. Also (Mavi, Jangra, and Jatowt 2022) presented a survey on multi-hop QA with 8 datasets and 29 models.\nAlthough the mentioned surveys investigate different aspects of MRC/QA, none of them have focused on the multi-hop datasets and evaluation metrics. Due to increasing attention to multi-hop MRC, also the important role and the large number of recent studies on multi-hop datasets and evaluation metrics, it is necessary to investigate them separately. Our contribution in this paper is to propose a comprehension survey to investigate the existing studies on multi-hop evaluation metrics and datasets, their growth trend, and also the important challenges in this area. In this regard, we first introduce the problem definition of the multi-hop MRC task and investigate the existing evaluation metrics, then review 15 multi-hop MRC datasets from 2017 to 2022. Also, a fine-grain analysis of the datasets will be presented from different aspects. Finally, open issues in this field have been discussed.\nIt is important to note that since there is a close relationship between MRC and Question Answering, most of the existing machine reading comprehension tasks are in the form of textual question answering (Zeng et al., 2020), also MRC is known as a basic task of textual question answering (Liu et al., 2019). Figure 3 shows the relationship between QA, MRC and multi-hop MRC (Bai & Daisy Zhe Wang, 2021). The rest of this paper is organized as follows: In Section 2, the definition of the problem and different types of the multi-hop MRC task are explained. In Section 3, evaluation metrics for multi-hop MCR are investigated, Next, in section 4, existing multihop MRC datasets are reviewed in detail and with a focus on their multi-hop aspects. Also, a fine-grain comparison of reviewed datasets will be presented in section 5. Open issues are expressed in Section 6, and finally Section 7 concludes the paper.\n\n2-PROBLEM DEFINITION\nIn general, the multi-hop MRC problem can be defined as: Given a collection of training examples ( ; ; ), the goal is to find a function which takes a context and a corresponding question as inputs, and gives answer as output.\nSince the problem is multi-hop, = ( 1 , 2 , … , ) can be a set of paragraphs (or documents) where denotes the number of paragraphs (or documents) and also question is such a way that needs the multiple disjoint pieces of information from to be answered.\nLike general MRC task, Answer in multi-hop MRC can be in different forms, where have been divided into four categories(D.\n\nChen, 2018):\nSpan-extraction: The span extraction task needs to extract the subsequence from ( ∈ ) as the correct answer of question by learning the function , such that = ( , ).\n\nMultiple-choice:\nGiven a set of candidate answers = { 1 , 2 , … , }, the multiple-choice task needs to select the correct answer from possible answer by learning the function , such that = ( , ).\n\nFree-form:\nThe correct answer is that ⊆ ⊈ . In other words, the answer is not necessarily limited to be a part of the passage. The free-form task needs to predict the correct answer by learning the function , such that = ( , ).\n\nCloze-style:\nThe correct answer is part of the question (usually a word or an entity) that is removed from question. The cloze style task needs to fill in the blank with the correct word or entity by learning the function , such that = ( , ).\nAll General MRC tasks have the potential to be used in form of multi-hop MRC form as well. But as Figure 4 shows, most existing multi-hop datasets focus on the first two tasks (span-extraction and multiple-choice). it should be said that paying attention to the two first tasks is not specific for multi-hop and it happens for general MRC too. The great attention to these tasks may be because they are more natural and similar to the real-world case in comparison to the cloze-style task. Although the free-from task is more similar to the real-world case among all tasks, it didn't achieve proper attention which can be because of the complexity of this task for creating datasets and proposing models.\n\n3-EVALUATION METRICS\nSince evaluation metrics are an important aspect of each task, in this section, the evaluation metrics used in the multi-hop MRC task will be reviewed and investigated.\n\nExact Match:\nThis metric is used to show whether two texts (predicated answer and the ground truth) are exactly the same. If they are exactly the same, EM will be 1, otherwise, it will be 0. This metric is a popular and useful metric in the span-extraction task, as in this task the predicated answer should be exactly matched with the ground-truth answer. F1 Score: The F1 score metric measures the average overlap between the predicted answer and the ground-truth one which is widely used in the span-extraction task. It is calculated with precision and recall measurements, that we briefly show as follows: where TP is True Positive, FP is False Positive, TN is True Negative and FN is False Negative. Consider the predicated and ground-truth answers as a bag of tokens. Accordingly, the definition of these parameter is shown in Table 1. Two previous metrics are common and popular in many NLP tasks as well as general MRC. There are three sets of metrics based on them that are more common and important in multi-hop MRC/QA models that have been introduced by Yang et al. (Yang et al., 2018a). The main goal of multi-hop MRC models is to find the answer then EM and F1 are used to evaluate this task known as the Answer task. Also, multi-hop MRC should present a series of evidence sentences that have led to the final answer known as the Support task as proof of multi-hop reasoning, this task is for evidence sentence extraction and could be seen as a kind of reasoning interpretability (Wu et al., 2021). Also, there is a task to evaluate both above tasks known as the Joint task. Each metric is explained in detail as follows: • Answer F1: It focusses on the answer which is a span of the context. It measures the average overlap between the predicted answer span and the ground-truth one.\n\n•\nAnswer EM: It focuses on the answer which is a span of the context. It is used to show whether the predicated answer span and the ground-truth are exactly the same.\n• Joint EM: is to combine the evaluation of answer span and supporting facts. It is 1 only if both tasks achieve an exact match and otherwise 0.\nAccuracy: Accuracy is a popular and fairly common metric to evaluate the performance of the multiple-choice and cloze-style MRC tasks. In the multiple-choice task, it is required to check whether the correct answer has been selected from the candidate answers, and in the Cloze-style task, it is required to check whether the correct words have been selected for the missing words.\nThe accuracy metric is calculated as follows: where N is the number of questions answered correctly, and M is the number of all queried questions. Unlike EM and F1 score, there is no any supporting fact version of accuracy and it is only used for the answer prediction task.\n\nBLEU:\nThe BLEU (BiLingual Evaluation Understudy) metric was firstly proposed by Papineni et al. (Papineni et al., 2002) for machine translation, but it can be easily used in the free-form MRC task too. BLEU is used to calculate the similarity of two sentences. In the free-form MRC task, the predicted answer and the ground truth one is those two sentences whose similarity should be calculated. In this case, the probability of n-grams in the candidate sentence that appear in the ground truth will be calculated: Where ℎ ( ) counts the number of ℎ n-gram appearing in the candidate answer . In a similar way, ℎ ( ) denotes the occurrence count of that n-gram in the ground-truth answer . If the length of the candidate sentence is very short, the accuracy of the BLEU score will decrease. To alleviate this problem, the penalty factor is introduced, which can be calculated as follow (Liu et al., 2019): Finally, the BLEU is computed as: where means n-grams up to length and equals 1 ⁄ . The BLEU score is the weighted average of each n-gram, and in most cases the maximum of is 4, namely BLEU-4.\n\nROUGE-L: ROUGE (Recall-Oriented Understudy for\nGisting Evaluation) has been proposed by Lin (Lin, 2004) and is commonly used for the machine translation and summarization tasks, but it can be used for free-form MRC as well. L in Rouge-L is longest Common Subsequence (LCS). Rouge-L means applying the longest common subsequence to measure the similarity between text and can be calculated as follows (Liu et al., 2019): where is the ground-truth answer, m is the number of tokens of , is the predicated answer, n is the number of tokens of , ( , ) is the length of the longest common subsequence of and , and is a parameter to control the importance of precision and recall .\nMeteor: Meteor (Metric for Evaluation of Translation with Explicit ORdering) has been proposed by Banerjeeand and Lavie (Banerjee & Lavie, 2005). Like two previous metrics, it was introduced for machine translation and can be used for free-form task as well. It is claimed that it has a high level of correlation with human judgments of translation quality in comparison to BLEU. It is calculated as follows: Where is a weighted F-score and is calculated as follows: Also, is calculated as follows: where ℎ is the total number of matching chunks and m is the total number of matched uniforms between the prediction and the ground truth. The parameters , , and are tuned to maximize the correlation with human judgments.\nAll three metrics correspond with the way humans would evaluate the same text and also, and they are language-independent. They have a great potential to use in multi-hop MRC, but there are some weaknesses for them. The most important one is they do not consider the meaning of the words. For example, \"watchman\" and \"guard\" would consider two different words. Besides they do not consider the importance of the words in the corpus for scoring. Figure 5 has summarized metrics and multi-hop MRC. Each metric has some features that make them suitable for one of the MRC tasks described in Section 2, then it cannot be said that one metric is better than the others as we cannot decide which one of the MRC tasks is better than the others. The frequency of usage of the evaluation metrics depends on the datasets. For example, Figure 4 showed that the number of the Span-extraction dataset is the most, then it can be concluded that EM and F1 scores are also the most used evaluation metrics which doesn't show their superiority, but it shows that there are more Span-prediction models and datasets.\n\n4-DATASETS\nIn this section, 115 datasets have been reviewed in detail. We choose the datasets that focus on multi-hop challenges, which means it is required to gather information and reason on multiple disjoint pieces of information to answer the question. Datasets are sorted mainly by release date, and we also start with the simplest datasets. These datasets introduced the question which cannot be answered with a single sentence and require gathering information from more than one sentence. Although they are not considered a multi-hop dataset today, due to the simplicity of the questions in comparison to recent multi-hop questions, they can be considered the first attempt to move from simple single-hop datasets (such as SQUAD (Rajpurkar et al., 2016)) to existing multi-hop datasets, then investigating them in this section will be useful. After a brief introduction of these simple datasets, we have investigated more complex multi-hop datasets that will be reviewed. In the following, at first, each dataset will be introduced separately, in addition to general information, we focus on the points that make them suitable for multi-hop MRC. The end of section, contains a fine-grain comparison of reviewed datasets using several figures and tables.\nNewsQA (Trischler et al., 2017) contains 119,633 plain-text questions on 12,744 news articles from CNN. The answers are spans that have to be extracted from context, but the length of spans is not fixed. This dataset also contains some questions that have no answer to examine the ability of the model to recognize inadequate information. The main goal of NewsQA is to emphasize reasoning behaviors. Table 2 shows the reasoning mechanism needed to answer questions in this dataset in comparison with the SQUAD dataset (Rajpurkar et al., 2016) which is a single-hop dataset. As you can see 20.7% of questions needs synthesizing information distributed across multiple sentences, and 13.2 % of questions need to be inferred from incomplete information or by recognizing conceptual overlap. However, in 27% of questions, a single sentence in the article entails the question, and 32.7% of questions can be answered with word matching. Although the number of complex questions (3 and 4) is more than SQUAD, in comparison to the number of the other type of questions (type 1 and 2) doesn't seem enough. besides, most of the questions in type 3 can be answered with a few sentences in one single paragraph and don't need complicated reasoning.  (Lai et al., 2017) has been collected from the English exams for middle and high school Chinese students and consists of 28,000 passages and 100,000 questions. Passages have different domains such as news, stories, ads, biography, philosophy, etc.\nThe answers should be chosen from four candidate answers where only one of them is correct. One important point about this dataset is that the questions and answers are not limited to being from the original passage, they can be described in any words.\nRACE-M and RACE-H are two subgroups of RACE, where RACE-M denotes the Middle-school examinations and RACE-H denotes the High-school examinations. Some useful statistics of the RACE dataset are shown in Table 3. Also, Table 4 shows the type of reasoning mechanisms of this dataset in comparing two single-hop MRC datasets and also the NewsQA dataset (the mechanism the same as NewsQA). The number of questions from types 3 and 4 is remarkably more than CNN and SQUAD (two single-hop MRC datasets), and also is more than the NewsQA dataset, but still not enough portions of questions in RACE are in type 1(which means don't need reasoning over multiple disjoint information).  TriviaQA (Joshi et al., 2017) contains over 650K question-answer-evidence tuples, the context consists of the web documents and wiki documents while the older dataset like SQUAD (Rajpurkar et al., 2016) is limited to wiki documents and the News is limited to the news article. Some general statistics of TriviaQA are shown in Table 5. One of the advantages of this dataset is the syntactic and lexical variability between questions, answers, and context sentences which makes the reasoning difficult. Besides, there are six documents per question and also 40% of the questions need reasoning over multiple sentences, which is about three times more than SQUAD, and also is more than NewsQA (Trischler et al., 2017) and RACE (Lai et al., 2017). Figure 6 shows the percentage of the multi-sentences question in 5 datasets. However, most of these questions can be answered by a few nearby sentences in one single paragraph, and does not require complex reasoning (Yang et al., 2018b). But this dataset is still (2021) used by some multihop MRC models that shows the importance of this dataset.   (Bollacker et al., 2008), but since the questions are simple, they first generated automatically questions that are understandable to AMT workers, and then have them paraphrase those into natural language. They make sure that questions include phenomena such as composition questions (45%), conjunctions (45%), superlatives (5%), and comparatives (5%). A drawback of this method for question-generating is that because queries are generated automatically the question distribution is artificial from a semantic perspective.  (Talmor & Berant, 2018) OpenBookQA (Mihaylov et al., 2018) consists of 6000 plain-text questions based on 1326 elementary-level science facts. The answers are plain text which should be chosen from multiple candidate answers. Unlike other datasets that are self-contained answers, an open book fact and broad common knowledge are used together to answer the questions they require multi-hop reasoning over core facts and common knowledge to answer the question. However, it should be said that reasoning over a whole document is rarely needed actually, and also it is unclear how many additional facts are needed (Khot et al., 2020). Some usefull statistics of OpenBookQA are shown in Table 6.  (Mihaylov et al., 2018) # of questions 5957\n\nVocabulary (q+c+f) 12839\nAnswer is the longest choice 1108(18.6%) Answer is the shortest chioce 216(3.6%) MultiRC (Khashabi et al., 2018) consists of ∼9k high-quality multiple-choice RC questions. It has been ensured that answering each of the questions requires reasoning over multiple sentences. This dataset is constructed using 7 different domains (news, Wikipedia articles, Articles on society, law and justice, Articles on history and anthropology, Elementary school science textbooks, 9/11 reports, and Fiction). You can see the statistics of this dataset in Table 7. Answering 60% of the questions of this dataset requires reasoning over multiple sentences. also, the required information to answer the questions is not explicitly stated in the context but is only inferable from it (e.g., implied counts, sentiments, and relationships). The number of multi-sentence questions is 5825 (from 9,872) and the number of sentences that are used to answer a question is 2.58 on average, these sentences are not continuous and the average distance between them is 2.4. However, this dataset has focused on passage discourse and entity tracking, rather than relation composition (Khot et al., 2020).\n\n2.58\nAverage number of sentences used for questions\n\n2.37\nAverage distance between the sentences used for each question\n\n2.4\nQAngaroo (Welbl et al., 2018) is composed of two multi-hop reading comprehension datasets: MedHop which is a cloze-style dataset, and WikiHop which is a multiple-choice dataset. The MedHop dataset is about molecular biology and consists of 1.6K instances for training, 342 instances for development, and 546 instances for testing. WikiHOP dataset consists of 51k questions, answers, and context where each context consists of several documents from Wikipedia. The size of WikiHop and MedHop datasets for different learning phases are shown in Table 8. In these datasets, models have to combine evidence across multiple documents and perform multi-hop inference. WikiHop is more popular Which is probably due to being open-domain and also the number of its questions. Each question in WikiHop is a tuple, which denotes two entities, and their relationship, then the answers in the WikiHop dataset are a single entity. As Table 9 shows, for 45% of cases, the answer can be found from multiple contexts, and for 9% of the cases, a single document suffices. Also, for 26% of cases, more than one candidate is plausible, (this is often due to hypernymy).\nHowever, the questions of the WikiHop dataset are not in natural text form, which makes it different from real-world cases.\nAlso, it is created by documents (from Web or Wikipedia) and a knowledge base (KB), as a result, these datasets are constrained by the schema of the KBs they use, and therefore the diversity of questions and answers is inherently limited (Yang et al., 2018a). also, these datasets have no information to explain the predicted answers (Ho et al., 2020).   (Welbl et al., 2018) Type of question Percentage (%) multi-step answer 45 Multiple plausible answers 15 Ambiguity due to hypernymy 11 Only single document required 9 HotpotQA (Yang et al., 2018a) has become one of the most popular multi-hop MRC datasets in recent years. It has 113k Wikipedia-based question-answer pairs. To answer the questions of this dataset, it is required to collect and reason over information from multiple supporting documents. In contrast to WikiHop (Welbl et al., 2018), the question and answer are in plain text form. The answers are variable-length spans, and there are 10 wiki passages per question. One of the distinguishing features of this database is that there are sentence-level supporting facts for each answer which is the sentences containing information that supports the answer. Thus, models should extract a span as the answer and also provide the supporting facts for the answers. The types of answers are shown in Table 10.\nHowever, there are some drawbacks to this dataset, for example, QASC (Khot et al., 2020) discussed that since the questions of this dataset were authored in a similar way, due to their domain and task setup, they are easy to decompose, Also, as discussed in Inoue et al (Inoue, 2020), the task of classifying sentence-level SFs is a binary classification task that is incapable of evaluating the reasoning and inference skills of the model. Besides, (Chen and Durrett, 2019;Min et al., 2019) revealed that many examples in this dataset do not require multi-hop reasoning to solve (Ho et al., 2020).  (Inoue, 2020) is proposed to evaluate the internal reasoning of the reading comprehension system in HotpotQA (Yang et al., 2018a). As it's said before, HotpotQA requires identifying supporting facts (SFs), but since only a subset of SFs contributes to the necessary reasoning, thus, achieving high accuracy performance in the Support task (it has been explained in section ) cannot prove a model's reasoning ability. R 4 C contains 4,588 questions and aims to evaluate a model's internal reasoning in a finer-grained manner than the Support task in HotPotQA. It requires giving not only answers but also derivations. A derivation is a semistructured natural language form that is used to explain and justify the predicted answers. Each question is annotated with 3 reference derivations (i.e., 13.8k derivations). However, the small size of the dataset is a serious limitation to train and evaluate end-to-end systems (Ho et al., 2020). Table 11 shows the statistics of the R 4 C corpus. \"st.\" denotes the number of derivation steps.\nEach instance is annotated with 3 golden derivations. 2WikiMultiHopQA (Ho et al., 2020) is a multi-hop dataset based on Wikipedia and WikiData 1 , and consists of 192k multihop questions. An important point about this dataset is that it contains both structured and unstructured data. There are four types of questions in this dataset: 1) Comparison questions which are used to compare two or more entities, 2) Inference questions to infer relation r from the two relations r1 and r2, 3) Compositional questions to achieve the answer from an entity and two relations without any inference relations, 4) Bridge comparison which requires finding bridge entities. each sample contains some information, namely evidence that is used to explain the answer. Evidence is in from of triples, where each triple is structured data (subject entity, property, object entity) obtained from WikiData. You can see the number of examples in each type along with the average length of questions and answers of 2WikiMultiHopQA dataset in Table 12. This dataset like HotPotQA (Yang et al., 2018a) uses the Answer, Support and Joint evaluation metrics.    Type of reasoning Percentage (%)  (Khot et al., 2020) is a multi-hop dataset that contains 9,980 8-way multiple-choice questions from elementary and middle school level science, and ach question is produced by composing two facts from an existing text corpus. To generate this dataset, crowd workers have first received only the first fact fS. Then, they have freely chosen the second fact fL from other available facts. Finally, the questions have been created by compromising these two facts. Thus, the models require commonsense reasoning for the composition of these facts to find the answer. You can see the number of questions, and unique fS and fL in Table   14. In contrast to OpenbookQA that which the number of facts to answer a question is unclear, in QASC, it is clear that two facts are sufficient to answer a question. The number of questions, fS and fL has been shown in Table 14. Also a comparison information among this dataset and previous multi-hop dataset has been shown in Table 15. As you can see QASC in addition to preparing supporting facts, annotated them too, also Decomposition is not evident.\n\nSupporting facts are annotated\nMuSeRC (Fenogenova et al., 2020) is the first multi-hop MRC Russian dataset. The questions in Russian Multi-Sentence Reading Comprehension (MuSeRC) dataset rely on multiple sentences and commonsense knowledge. It contains more than 900 paragraphs and 12,805 sentences across 5 different domains, namely: (1) elementary school texts, (2) news, (3) fiction stories, (4) fairy tales, and (5) summaries of TV series and books (Figure 8). In this dataset, the answers are not necessarily a span of the passage, and there may also be more than one answer to a question. Thus, the models should choose the best possible answer.\nQuestions and answers have been created by crowd workers and, questions that can be answered with only one sentence have been removed to ensure that all questions are multi-hop. Although the number of the question in MuSeRC are less than MultiRC (Khashabi et al., 2018) but all of its questions are multi-hop (less than 60% question of MultiRC is multi-hop question), you can see some comparison information between MuSeRC and MultiRC in Table 16.  (Fenogenova et al., 2020)  ComQA ) is a large-scale Chinese dataset that contains more than 120k human-labeled questions. They focus on compositional QA which means the answers have been obtained from multiple but discontinuous segments in the documents and the answers are not limited to one span but can be a combination of several separate sentences. Besides, as in this dataset HTML pages are used as the context, even a table or an image can be selected as a part of the answer. To generate the ComQA dataset, a question-document pair is obtained first from a Chinese search engine called Sogou Search 2 , the content of the retrieved page is then converted into a list of sentences, and the crowd workers find the answer to the question through the context. In Figure   9, you can see the frequency and type of questions in this dataset.\nThere are different kinds of questions in this dataset: 1) Simple: questions about a single property of an entity. 2)Compositional: questions that require answering more primitive questions and combining them. 2)Temporal: questions that require temporal reasoning for deriving the answer. 3)Comparison: questions that need some kind of comparison. 4)Telegraphic: short questions in an informal manner similar to keyword queries. 4) Answer tuple: Where an answer is a tuple of connected entities as opposed to a single entity. Table 17 shows Results of the manual analysis of 300 questions.      For the last part of this section, Figure 10 has been prepared to summarize of the reviewed datasets. NewsQA, Race, and TriviaQA has known as multi-passages datasets but because of the multi-sentences question, they were reviewed here. The rest of the datasets has known as multi-hop datasets based on the problem definition in section 2.\n\n5-ANALYSIS:\nAfter reviewing each dataset in detail, some fine-grained comparisons will be presented in this section by preparing some figures and tables.\n\n5-1 Frequency\nFirst of all, the frequency usage of each dataset in recent multi-MRC models has been shown in Figure 11 (we used the same studies as Figure 2 which presented as Appendix1). As you can see, HotpotQA (Yang et al., 2018a) and WikiHop (Welbl et al., 2018) have received the most attention among the multi-hop datasets. There are several reasons for this: 1. They are considered pioneers in multi-hop MRC because They were the first successful and serious attempt to cover multi-hop challenges and they attract a great attention to the multi-hop MRC task.\n\nMulti-hop datasets (multi-hop questions)\nNewsQA (Trischler et al., 2017) Race (Lai et al., 2017) TriviaQA (Joshi et al., 2017) COMPLEXWEBQUESTIONS (Talmor & Berant, 2018) OpenBookQA (Mihaylov et al., 2018) MultiRC (Khashabi et al., 2018) WikiHop (Welbl et al., 2018) MedHop (Welbl et al., 2018) HotpotQA (Yang et al., 2018a) R 4 C (Inoue, 2020) 2WikiMultiHopQA (Ho et al., 2020) HybridQA (W.  QASC (Khot et al., 2020) MuSeRC (Fenogenova et al., 2020) ComQA ( 2. Although some datasets were introduced recently, since these two datasets have been used by many multi-hop models, they provide the good situation for comparing the performance of the models. Therefore, models would like to use these two datasets to compare their performance with other models, and this leads to more use of these two datasets. We also prepare Figure 10 to investigate the growth trends of HotpotQA and WikiHop from 2018 to 2021 (note that both datasets have been introduced in 2018). As you can see, HotpotQA is more popular than WikiHop, there are some reasons for it: 1. Questions in the WikiHop dataset are in triple form, while questions in the HotpotQA dataset are in the plain text form, which makes it more similar to real-world questions.\n2. Answers in HotpotQA are in the form of Span-extraction while answers in WikiHop are multiple-choice. As mentioned in Section 2, the Span-extraction task is more popular among models so the frequency usage of HotpotQA will be more.\n3. The HotpotQA dataset presents a new task called the Supporting fact task while WikiHop only focuses on the Answer task. So HotpotQA prepares a good situation to evaluate the ability of reasoning of the models.\nBesides, as Figure 12 the number of usages of both datasets is maximum in 2019, which is due to the fact that the introduction of these two datasets in 2018 caused a lot of attention to the multi-hop MRC task, then in 2019, many multi-hop MRC models were proposed based on these two datasets. (It has been shown in Figure 2 too). In the following years, due to the introduction new multi-hop datasets, the usage of these two datasets got decreased but, both datasets are still the most popular datasets for multi-hop MRC models.  Also, there is a feature about how many portions of each dataset are multi-hop. As it has been said before, we begin with some simple datasets that the questions can't be answered with a single sentence, although the sentences are within one passage and only a portion of these datasets include multi-sentence questions. These datasets are considered the first attempts to move from the single-hop datasets. (Note that some datasets are still used by recent multi-hop models, for example, DRNQA (X. Li et al., 2020) which has been published in 2020, has used TriviaQA (\n\n5-3 Result\nAs the last review of multi-hop datasets in this section, the stat-of-the-art result of existing multi-hop models on the reviewed multi-hop dataset will be shown. we considered the multi-hop MRC models from 2020 to 2021. As shown in Section X, the two MRC tasks, Span-extraction and Multiple-choice, have received the most attention among datasets, so we will review them separately.It should be noted that due to the different models, the results are not expressed to compare the performance of datasets, but only to show the state-of-the-result on each database.\n\n5-3-1 Span-extraction datasets:\nSince the answers are in the span-extraction form the EM and F1 are used as the evaluation metrics (Answer, Support, and Joint task). Table 21 shows the stat-of-the-result of the span-extraction dataset alongside the models. HotPotQA (Yang et al., 2018a) and 2WikiMultiHopQA (Ho et al., 2020) prepared all three task evaluation results while TriviaQA (Joshi et al., 2017), MuScRC (Fenogenova et al., 2020), and Hybrid (W.  only focus on the Answer task. TriviaQa (Joshi et al., 2017) DRNQA (X. Li et al., 2020) 59.73 62.21 MuSeRC (Fenogenova et al., 2020) MuScRC (Fenogenova et al., 2020) 25.6 65.6 HybridQA (W.  HybridQA (W.  43.8 50.6 Table 22 contains the stat-of-the-result of multi-hop models on multiple-choice datasets. Since the answer type of this dataset is multiple-choice then Accuracy is the evaluation metric on the test and development set.\n\n6-OPEN ISSUES\nDatasets with the new challenges are a good motivation to improve current models. So, to reduce the gap between existing multi-hop MRC models and real-world cases, creating the datasets with more challenges is vital. Even the most popular multi-hop datasets still have shortcomings, then if models only focus on the existing dataset, the gap between them and real-world cannot be properly reduced, so it is important to focus on building datasets.\nThe lack of free and close-style datasets has made it impossible to present models for these two tasks, while both tasks have a good potential to use in form of multi-hop MRC.\nAmong all the types of MRC tasks described in Section 2, the free-form task is the most similar task to the real-world case but due to its complexity, there is no proper dataset for it. Since this type of answer is more similar to real-world scenarios, focusing on presenting free-form datasets to encourage models can improve the application of MRC systems.\n\n7-CONCLUSION\nIn this study, a comprehensive survey on the multi-hop MRC evaluation metrics and dataset as two vital and important aspects of multi-hop MRC has been presented with a focus on the existing evaluation metrics and datasets, their growth trend and the important challenges of this area. In the beginning, the definition of the multi-hop MRC problem has been presented then the evaluation metrics have been investigated in detail. In following, 15 multi-hop datasets from 2017 to 2022 had been reviewed in detail then and some comprehensive analyses were presented for a fine-grain comparison of the different features of datasets. Finally, open issues in this field had been discussed."
+            ]
+          },
+          {
+            "name" : "date",
+            "values" : [
+              "2022-12-08"
+            ]
+          },
+          {
+            "name" : "source",
+            "values" : [
+              "s2orc/valid"
+            ]
+          }
+        ]
+     }
+    ]
+  },
+  "status" : {
+    "status" : "AVAILABLE",
+    "elapsedMs" : 0,
+    "progress" : [
+      {
+        "task" : "Resolving selector query",
+        "status" : "SKIPPED",
+        "attributes" : [
+          {
+            "name" : "Skipped",
+            "value" : "cached"
+          }
+        ]
+      },
+      {
+        "task" : "Fetching candidate labels",
+        "status" : "SKIPPED",
+        "attributes" : [
+          {
+            "name" : "Skipped",
+            "value" : "cached"
+          }
+        ]
+      },
+      {
+        "task" : "Scoring candidate labels",
+        "status" : "SKIPPED",
+        "attributes" : [
+          {
+            "name" : "Skipped",
+            "value" : "cached"
+          }
+        ]
+      },
+      {
+        "task" : "Computing coverage",
+        "status" : "SKIPPED",
+        "attributes" : [
+          {
+            "name" : "Skipped",
+            "value" : "cached"
+          }
+        ]
+      }
+    ]
+  },
+  "spec" : {
+    "scope" : {
+      "limit" : "10000",
+      "selector" : {
+        "type" : "byId",
+        "ids" : [
+          120716,
+          132737,
+          91297,
+          116752,
+          10796,
+          132184,
+          104652,
+          127134,
+          77736,
+          132799,
+          105105,
+          93909,
+          44525,
+          11281,
+          10870,
+          23282,
+          142251,
+          5681,
+          117968,
+          15350,
+          106097,
+          58677,
+          438,
+          100518,
+          154926,
+          112380,
+          83401,
+          141865,
+          47489,
+          23795,
+          28965,
+          61474,
+          44356,
+          83935,
+          128455,
+          43875,
+          130758,
+          135364,
+          138747,
+          75412,
+          2792,
+          156466,
+          70875,
+          110251,
+          8248,
+          13424,
+          87120,
+          16487,
+          17522,
+          18140,
+          54219,
+          7794,
+          95319,
+          95034
+        ]
+      }
+    },
+    "labels" : {
+      "minLabels" : 0,
+      "maxLabels" : 20000,
+      "labelCountMultiplier" : 3.5,
+      "source" : {
+        "fields" : [ ]
+      },
+      "surface" : {
+        "minWordCount" : 1,
+        "maxWordCount" : 8,
+        "minCharacterCount" : 4,
+        "minWordCharacterCountAverage" : 2.9,
+        "preferredWordCount" : 2.5,
+        "preferredWordCountDeviation" : 2.5,
+        "singleWordLabelWeightMultiplier" : 0.5,
+        "multiWordLabelPriority" : false,
+        "capitalizedLabelWeight" : 1.0,
+        "uppercaseLabelWeight" : 1.0,
+        "acronymLabelWeight" : 1.0,
+        "withEmbedding" : false,
+        "exclude" : [
+          {
+            "type" : "all"
+          }
+        ]
+      },
+      "frequencies" : {
+        "minAbsoluteDf" : 2,
+        "minRelativeDf" : 0.0,
+        "maxRelativeDf" : 0.4,
+        "maxLabelsPerDocument" : 5,
+        "truncatedPhraseThreshold" : 0.2
+      },
+      "probabilities" : {
+        "autoStopLabelRemovalStrength" : 0.35,
+        "autoStopLabelMinCoverage" : 0.4
+      },
+      "scorers" : {
+        "tokenCountScorerWeight" : 1.0,
+        "tfScorerWeight" : 1.0,
+        "idfScorerWeight" : 1.0,
+        "completePhrasesScorerWeight" : 1.0,
+        "truncatedPhrasesScorerWeight" : 1.0,
+        "tokenCaseScorerWeight" : 1.0
+      },
+      "arrangement" : {
+        "enabled" : false,
+        "algorithm" : {
+          "type" : "ap",
+          "ap" : {
+            "maxIterations" : 2000,
+            "minSteadyIterations" : 100,
+            "threads" : "1-2",
+            "softening" : 0.9,
+            "damping" : 0.9,
+            "minPruningGain" : 0.3,
+            "inputPreference" : 0.0,
+            "preferenceInitializer" : "NONE",
+            "preferenceInitializerScaling" : 1.0
+          }
+        },
+        "relationship" : {
+          "type" : "cooccurrences",
+          "cooccurrences" : {
+            "cooccurrenceWindowSize" : 32,
+            "cooccurrenceCountingAccuracy" : 0.5,
+            "similarityWeighting" : "INCLUSION",
+            "threads" : "1-4"
+          },
+          "embeddings" : {
+            "maxSimilarLabels" : 64,
+            "minSimilarity" : 0.5,
+            "threads" : "1-4"
+          }
+        }
+      },
+      "direct" : [ ]
+    },
+    "documents" : {
+      "arrangement" : {
+        "enabled" : false,
+        "algorithm" : {
+          "type" : "ap",
+          "ap" : {
+            "maxIterations" : 2000,
+            "minSteadyIterations" : 100,
+            "threads" : "1-2",
+            "softening" : 0.5,
+            "damping" : 0.9,
+            "minPruningGain" : 0.3,
+            "inputPreference" : -1.0,
+            "addSelfSimilarityToPreference" : false
+          },
+          "maxClusterLabels" : 3,
+          "maxLabelsPerDocument" : 10
+        },
+        "relationship" : {
+          "type" : "mlt",
+          "mlt" : {
+            "maxSimilarDocuments" : 8,
+            "minDocumentLabels" : 1,
+            "maxQueryLabels" : 4,
+            "minQueryLabelOccurrences" : 1,
+            "minMatchingQueryLabels" : 1,
+            "maxScopeSizeForSubIndex" : 0.3,
+            "maxInMemorySubIndexSize" : 8000000,
+            "threads" : "1-4"
+          },
+          "embeddingCentroids" : {
+            "maxSimilarDocuments" : 16,
+            "minDocumentLabels" : 1,
+            "maxQueryLabels" : 4,
+            "minQueryLabelOccurrences" : 1,
+            "threads" : "1-4"
+          }
+        }
+      },
+      "embedding" : {
+        "enabled" : false,
+        "algorithm" : {
+          "type" : "lv",
+          "lv" : {
+            "maxIterations" : 300,
+            "negativeEdgeCount" : 5,
+            "negativeEdgeWeight" : 2.0,
+            "negativeEdgeDenominator" : 1.0,
+            "threads" : "1-4"
+          }
+        },
+        "relationship" : {
+          "type" : "mlt",
+          "mlt" : {
+            "maxSimilarDocuments" : 8,
+            "minDocumentLabels" : 1,
+            "maxQueryLabels" : 4,
+            "minQueryLabelOccurrences" : 1,
+            "minMatchingQueryLabels" : 1,
+            "maxScopeSizeForSubIndex" : 0.3,
+            "maxInMemorySubIndexSize" : 8000000,
+            "threads" : "1-4",
+            "maxSimilarDocumentsPerLabel" : 5
+          },
+          "embeddingCentroids" : {
+            "maxSimilarDocuments" : 16,
+            "minDocumentLabels" : 1,
+            "maxQueryLabels" : 4,
+            "minQueryLabelOccurrences" : 1,
+            "threads" : "1-4",
+            "maxSimilarDocumentsPerLabel" : 5
+          }
+        }
+      }
+    },
+    "output" : {
+      "format" : "json",
+      "parameters" : { },
+      "pretty" : false,
+      "labels" : {
+        "enabled" : true,
+        "labelFormat" : "ORIGINAL",
+        "documents" : {
+          "enabled" : false,
+          "maxDocumentsPerLabel" : 10,
+          "outputScores" : false
+        }
+      },
+      "documents" : {
+        "enabled" : true,
+        "onlyWithLabels" : true,
+        "onlyAssignedToLabels" : false,
+        "labels" : {
+          "enabled" : false,
+          "maxLabelsPerDocument" : 2147483647,
+          "minLabelOccurrencesPerDocument" : 0
+        },
+        "content" : {
+          "enabled" : true,
+          "fields" : [
+            {
+              "name" : "id",
+              "maxValues" : 3,
+              "maxValueLength" : 10000000,
+              "highlighting" : {
+                "criteria" : false,
+                "scope" : false,
+                "truncationMarker" : "…",
+                "startMarker" : "⁌%s⁍",
+                "endMarker" : "⁌\\%s⁍"
+              },
+              "valueCount" : false
+            },
+            {
+              "name" : "text",
+              "maxValues" : 3,
+              "maxValueLength" : 10000000,
+              "highlighting" : {
+                "criteria" : false,
+                "scope" : false,
+                "truncationMarker" : "…",
+                "startMarker" : "⁌%s⁍",
+                "endMarker" : "⁌\\%s⁍"
+              },
+              "valueCount" : false
+            },
+            {
+              "name" : "date",
+              "maxValues" : 3,
+              "maxValueLength" : 10000000,
+              "highlighting" : {
+                "criteria" : false,
+                "scope" : false,
+                "truncationMarker" : "…",
+                "startMarker" : "⁌%s⁍",
+                "endMarker" : "⁌\\%s⁍"
+              },
+              "valueCount" : false
+            },
+            {
+              "name" : "source",
+              "maxValues" : 3,
+              "maxValueLength" : 10000000,
+              "highlighting" : {
+                "criteria" : false,
+                "scope" : false,
+                "truncationMarker" : "…",
+                "startMarker" : "⁌%s⁍",
+                "endMarker" : "⁌\\%s⁍"
+              },
+              "valueCount" : false
+            }
+          ]
+        }
+      }
+    },
+    "performance" : {
+      "threads" : "1-4"
+    },
+    "summary" : {
+      "labeledDocuments" : true
+    },
+    "debug" : {
+      "logCandidateLabelPartialScores" : false
+    }
+  }
+}
