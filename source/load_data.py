@@ -64,10 +64,13 @@ def prepare_data_frame(input_path: str, nlp: spacy.Language, chunksize: int = 10
                     docs = nlp.pipe(texts, batch_size=10, disable=["ner", "parser"])
                     for doc, (date, semantic_id, group) in zip(docs, metadata):
                         clean_text = tag_with_spacy(doc)
-                        for t in clean_text:
-                            if len(t) > 5:
+                        print(clean_text[0])
+                        print(clean_text[1])
+                        for i in enumerate(clean_text[0]):
+                            if len(clean_text[0][i]) > 5:
                                 rows.append({
-                                    "clean_text": t,
+                                    "clean_text": clean_text[0][i],
+                                    "text": clean_text[1][i],
                                     "date": date,
                                     "semantic_id": semantic_id,
                                     'group': group})
@@ -91,22 +94,30 @@ def prepare_data_frame(input_path: str, nlp: spacy.Language, chunksize: int = 10
                     name_number += 1
 
 
-def tag_with_spacy(doc) -> list:
+def tag_with_spacy(doc):
 
     # keep clean text
     clean_tokens = []
+    tokens = []
 
     # tag and clean
-    par = []
+    clean_par = []
+    normal_par = []
+
+
     for token in doc:
         # last token
         if token.i == len(doc) - 1:
-            clean_tokens.append(par)
+            clean_tokens.append(clean_par)
+            tokens.append(normal_par)
 
         # normal token
         elif token.is_space and '\n' in token.text:
-            clean_tokens.append(par)
-            par = []
+            clean_tokens.append(clean_par)
+            tokens.append(normal_par)
+            normal_par.append(token)
+            clean_par = []
+
         # new paragraph
         elif not (
                 token.is_stop or
@@ -115,9 +126,12 @@ def tag_with_spacy(doc) -> list:
                 token.like_url or not
                 token.is_alpha or
                 len(token.text) <= 2):
-            par.append(token.lemma_)
+            clean_par.append(token.lemma_)
 
-    return clean_tokens
+        else:
+            normal_par.append(token)
+
+    return clean_tokens, tokens
 
 
 def load_data(dir_with_corpus_files: str, nlp: spacy.Language, chunksize: int = 10):
