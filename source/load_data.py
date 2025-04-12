@@ -84,6 +84,7 @@ def prepare_data_frame(input_path: str, nlp: spacy.Language, chunksize: int = 10
                 metadata.append((date, semantic_id, group))
 
                 if len(texts) >= chunksize:
+                    print(f'{len(texts)} > {chunksize} of {input_path.name}')
                     docs = nlp.pipe(texts, batch_size=10, disable=["ner", "parser"])
 
                     # zip for interation on docs and meta
@@ -100,6 +101,8 @@ def prepare_data_frame(input_path: str, nlp: spacy.Language, chunksize: int = 10
                                 })
 
                     df = pd.DataFrame(rows)
+                    with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
+                        print(df)
                     output_file_name = output_file_name + f'_{name_number}_prp.pkl'
                     output_path = os.path.join(folder_path, output_file_name)
                     print(f"Tagging done. Saving the file to {output_path}")
@@ -110,6 +113,7 @@ def prepare_data_frame(input_path: str, nlp: spacy.Language, chunksize: int = 10
                     texts = []
                     metadata = []
                     rows = []
+                    output_file_name = input_path.name.replace('.json', '')
 
 
 def load_data(dir_with_corpus_files: str, nlp: spacy.Language, chunksize: int = 10):

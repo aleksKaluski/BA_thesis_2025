@@ -36,14 +36,7 @@ def main():
     nlp = spacy.load("en_core_web_sm")
     ld.load_data(dir_with_corpus_files=input_path,
                  nlp=nlp,
-                 chunksize=2)
-
-    # df = 'files/dfs/mock_meaning_0_prp.pkl'
-    # df = pd.read_pickle(df)
-    # with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
-    #     print(df)
-
-main()
+                 chunksize=40)
 
 
 if __name__ == '__main__':
