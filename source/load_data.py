@@ -17,128 +17,105 @@ File for loading data, tagging with spacy and feeding word2vec model.
 """
 
 
-def prepare_data_frame(input_path: str, nlp: spacy.Language, chunksize: int = 10):
-
-
-    # We take .json file, load it, preprocess and work on that later
-    assert os.path.exists(input_path)
-
-    # prepare output patdh
-    if input_path.endswith('.json'):
-
-        folder_path = 'files\dfs'
-        input_path = Path(input_path)
-        input_file_name = input_path.name
-        print(f'Loading data from {input_file_name}')
-        output_file_name = input_file_name.replace('.json', '')
-
-        # for naming convention
-        name_number = 0
-        rows = []
-
-        # open large json file
-        with open(input_path, "rb") as f:
-            obj = ijson.items(f, "documents.list.item")
-
-            print(f"Tagging {input_file_name} text with spacy has started.")
-
-            # TODO: fixed here
-
-            texts = []
-            metadata = []
-            for _, record in enumerate(obj):
-                content = record["content"]
-                text = content[1]['values'][0]
-                date = content[2]['values'][0]
-                semantic_id = content[0]['values'][0]
-                # mock metadata
-                colors = ['psychology', 'ethics', 'philosphy']
-                group = random.choice(colors)
-
-                texts.append(text)
-                print(len(texts))
-                metadata.append((date, semantic_id, group))
-                print(metadata)
-
-                if len(texts) < chunksize:
-                    docs = nlp.pipe(texts, batch_size=10, disable=["ner", "parser"])
-                    for doc, (date, semantic_id, group) in zip(docs, metadata):
-                        clean_text = tag_with_spacy(doc)
-                        print(clean_text[0])
-                        print(clean_text[1])
-                        for i in enumerate(clean_text[0]):
-                            if len(clean_text[0][i]) > 5:
-                                rows.append({
-                                    "clean_text": clean_text[0][i],
-                                    "text": clean_text[1][i],
-                                    "date": date,
-                                    "semantic_id": semantic_id,
-                                    'group': group})
-                    df = pd.DataFrame(rows)
-                    with pd.option_context('display.max_rows', 10, 'display.max_columns', None, 'display.width', 500):
-                        print(df)
-                        print(df.info())
-
-
-                if len(texts) >= chunksize:
-                    output_file_name = output_file_name + f'{name_number}_prp.pkl'
-                    output_path = os.path.join(folder_path, output_file_name)
-                    print(f"Tagging done. Saving the file to {output_path} ")
-                    print("-"*50)
-
-                    # safe the chunk
-                    # df.to_pickle(output_path)
-                    with pd.option_context("display.max_colwidth", None):
-                        print(df)
-
-                    name_number += 1
-
-
 def tag_with_spacy(doc):
-
-    # keep clean text
     clean_tokens = []
-    tokens = []
-
-    # tag and clean
     clean_par = []
-    normal_par = []
 
+    original_tokens = []
+    original_par = []
 
     for token in doc:
-        # last token
-        if token.i == len(doc) - 1:
-            clean_tokens.append(clean_par)
-            tokens.append(normal_par)
-
-        # normal token
-        elif token.is_space and '\n' in token.text:
-            clean_tokens.append(clean_par)
-            tokens.append(normal_par)
-            normal_par.append(token)
+        if token.is_space and '\n' in token.text:
+            if clean_par:
+                clean_tokens.append(clean_par)
+                original_tokens.append(' '.join([t.text for t in original_par]))
             clean_par = []
-
-        # new paragraph
+            original_par = []
         elif not (
                 token.is_stop or
                 token.is_punct or
                 token.is_space or
-                token.like_url or not
-                token.is_alpha or
-                len(token.text) <= 2):
+                token.like_url or
+                not token.is_alpha or
+                len(token.text) <= 2
+        ):
             clean_par.append(token.lemma_)
-
+            original_par.append(token)
         else:
-            normal_par.append(token)
+            original_par.append(token)
 
-    return clean_tokens, tokens
+    # last paraghraph
+    if clean_par:
+        clean_tokens.append(clean_par)
+        original_tokens.append(' '.join([t.text for t in original_par]))
+
+    return clean_tokens, original_tokens
+
+
+def prepare_data_frame(input_path: str, nlp: spacy.Language, chunksize: int = 10):
+    assert os.path.exists(input_path)
+
+    folder_path = 'files/dfs'
+    input_path = Path(input_path)
+
+    if input_path.name.endswith('.json'):
+
+        print(f'Loading data from {input_path.name}')
+        output_file_name = input_path.name.replace('.json', '')
+
+        rows = []
+        texts = []
+        metadata = []
+        name_number = 0
+
+        with open(input_path, "rb") as f:
+            obj = ijson.items(f, "documents.list.item")
+
+            print(f"Tagging {input_path.name} text with spacy has started.")
+
+            for record in obj:
+                content = record["content"]
+                text = content[1]['values'][0]
+                date = content[2]['values'][0]
+                semantic_id = content[0]['values'][0]
+                group = random.choice(['psychology', 'ethics', 'philosophy'])
+
+                texts.append(text)
+                metadata.append((date, semantic_id, group))
+
+                if len(texts) >= chunksize:
+                    docs = nlp.pipe(texts, batch_size=10, disable=["ner", "parser"])
+
+                    # zip for interation on docs and meta
+                    for doc, (date, semantic_id, group) in zip(docs, metadata):
+                        clean_text, original_text = tag_with_spacy(doc)
+                        for i in range(len(clean_text)):
+                            if len(clean_text[i]) > 5:
+                                rows.append({
+                                    "clean_text": clean_text[i],
+                                    "text": original_text[i],
+                                    "date": date,
+                                    "semantic_id": semantic_id,
+                                    "group": group
+                                })
+
+                    df = pd.DataFrame(rows)
+                    output_file_name = output_file_name + f'_{name_number}_prp.pkl'
+                    output_path = os.path.join(folder_path, output_file_name)
+                    print(f"Tagging done. Saving the file to {output_path}")
+                    print("-" * 50)
+                    df.to_pickle(output_path)
+
+                    name_number += 1
+                    texts = []
+                    metadata = []
+                    rows = []
 
 
 def load_data(dir_with_corpus_files: str, nlp: spacy.Language, chunksize: int = 10):
-
     path = Path(dir_with_corpus_files)
-    assert os.path.exists(path), f"Provided path {dir_with_corpus_files} does not exist"
-    assert os.path.isdir(path), f"Provided path {dir_with_corpus_files} is not dir path!"
+    assert path.exists(), f"Path {dir_with_corpus_files} does not exist"
+    assert path.is_dir(), f"Path {dir_with_corpus_files} is not a directory"
 
     for file in os.listdir(dir_with_corpus_files):
         filename = os.fsdecode(file)
@@ -146,7 +123,7 @@ def load_data(dir_with_corpus_files: str, nlp: spacy.Language, chunksize: int = 
             directory = os.path.join(dir_with_corpus_files, filename)
             prepare_data_frame(directory, nlp, chunksize)
         else:
-            print(f"Provided file {filename} is not json. Skipping the file...")
+            print(f"Provided file {filename} is not a json file. Skipping...")
 
 
 # Generator for feeding word2vec model
