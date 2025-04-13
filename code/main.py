@@ -18,6 +18,11 @@ from gensim.models import Word2Vec
 import time
 from memory_profiler import profile
 
+#TODO:
+# - znajdź cenrroidy
+# - dodaj gensim bigrams
+# - popraw wykresy
+# - merytoryczny upgrade
 
 def main():
     timings = {}
@@ -50,6 +55,7 @@ def main():
     """
     3) Train a few models
     """
+
     start = time.perf_counter()
     # Parameter grid
     window = [1, 3]
@@ -71,6 +77,14 @@ def main():
 
     timings['train_models'] = time.perf_counter() - start
 
+    """
+    4) Evaluate models
+    """
+    start = time.perf_counter()
+    m = ev.compleate_evaluation(dir_with_models='files/models',
+                                ev_file='files/google.txt',
+                                test_words=[('good', 'bad'), ('game', 'theory')])
+    timings['evaluate_models'] = time.perf_counter() - start
     """
     4) Evaluate models
     """
@@ -102,6 +116,8 @@ def main():
     df = dm.reduce_dimentionality(vec, df)
 
     timings['reduce_dimensions'] = time.perf_counter() - start
+
+
     """
     6) visualize the document distance
     """
