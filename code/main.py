@@ -11,7 +11,7 @@ import spacy
 from sklearn.cluster import AgglomerativeClustering
 from itertools import product
 from gensim.models import Word2Vec
-
+from gensim.models.phrases import Phrases, ENGLISH_CONNECTOR_WORDS, Phraser
 # required packages: pip install spacy pandas numpy ijson colorama matplotlib seaborn gensim umap-learn tqdm wordcloud scikit-learn
 # python -m spacy download en_core_web_sm
 
@@ -23,6 +23,7 @@ from memory_profiler import profile
 # - dodaj gensim bigrams
 # - popraw wykresy
 # - merytoryczny upgrade
+# - popraw ewaluację
 
 def main():
     timings = {}
@@ -36,12 +37,12 @@ def main():
     """ 
     1) load the data
     """
-    start = time.perf_counter()
-    nlp = spacy.load("en_core_web_sm")
-    ld.load_data(dir_with_corpus_files=input_path,
-                 nlp=nlp,
-                 chunksize=40)
-    timings['load_data'] = time.perf_counter() - start
+    # start = time.perf_counter()
+    # nlp = spacy.load("en_core_web_sm")
+    # ld.load_data(dir_with_corpus_files=input_path,
+    #              nlp=nlp,
+    #              chunksize=40)
+    # timings['load_data'] = time.perf_counter() - start
 
 
     """
@@ -55,7 +56,6 @@ def main():
     """
     3) Train a few models
     """
-
     start = time.perf_counter()
     # Parameter grid
     window = [1, 3]
