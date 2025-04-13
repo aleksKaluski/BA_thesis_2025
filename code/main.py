@@ -1,16 +1,10 @@
-import clustering as cl
-import visualization as vs
-import load_data as ld
-import word_clouds as wd
-import merge_df as mf
-import evaluation_w2v as ev
-import dim_reduction as dm
+from code.visual import visualization as vs, word_clouds as wd
+from code.preprocessing import load_data as ld, merge_df as mf
+from code.computations import evaluation_w2v as ev, clustering as cl, dim_reduction as dm
 
 # basic
 import os
-from pathlib import Path
 import pandas as pd
-import numpy as np
 
 # case_specific
 import spacy
@@ -24,13 +18,11 @@ from gensim.models import Word2Vec
 import time
 from memory_profiler import profile
 
-@profile
+
 def main():
     timings = {}
 
-
-    # change working directory
-    os.chdir("C:\BA_thesis\BA_v2_31.03")
+    os.chdir(r"C:/BA_thesis/BA_v2_31.03")
 
     print(f"working directory: {os.getcwd()}")
     input_path = os.getcwd() + '/files/corpus_data'
@@ -42,7 +34,8 @@ def main():
     start = time.perf_counter()
     nlp = spacy.load("en_core_web_sm")
     ld.load_data(dir_with_corpus_files=input_path,
-                 nlp=nlp)
+                 nlp=nlp,
+                 chunksize=40)
     timings['load_data'] = time.perf_counter() - start
 
 

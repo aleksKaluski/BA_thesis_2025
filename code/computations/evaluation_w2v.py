@@ -2,11 +2,10 @@
 import os
 from pathlib import Path
 import pandas as pd
-import numpy as np
 
 # other files
-import load_data as ld
-import visualization as vs
+from code.preprocessing import load_data as ld
+from code.visual import visualization as vs
 
 # case-specific
 from gensim.models import Word2Vec

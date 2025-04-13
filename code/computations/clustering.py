@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 
 # other files
-import visualization as vs
+from code.visual import visualization as vs
 
 # case-specific
 from sklearn import metrics
