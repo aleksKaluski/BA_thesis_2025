@@ -1,4 +1,5 @@
 from code.preprocessing import load_data as ld
+from code.preprocessing import load_data as ld, merge_df as mf
 
 # basic
 import os
@@ -10,7 +11,7 @@ import spacy
 from memory_profiler import profile
 
 # change working directory
-os.chdir("/")
+os.chdir(r"C:/BA_thesis/BA_v2_31.03")
 
 print(f"working directory: {os.getcwd()}")
 input_path = os.getcwd() + r'\files\corpus_data'
@@ -18,10 +19,7 @@ print(input_path)
 
 @profile
 def main():
-    nlp = spacy.load("en_core_web_sm")
-    ld.load_data(dir_with_corpus_files=input_path,
-                 nlp=nlp,
-                 chunksize=40)
+    mf.merge_df('files/dfs')
 
 
 if __name__ == '__main__':
