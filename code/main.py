@@ -20,7 +20,7 @@ from memory_profiler import profile
 
 #TODO:
 # - znajdź cenrroidy
-# - dodaj gensim bigrams
+# - dodaj gensim bigrams - nope
 # - popraw wykresy
 # - merytoryczny upgrade
 

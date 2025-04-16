@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import pandas as pd
 import numpy as np
+from numba.np.math.numbers import complex_eq_impl
 
 # other files
 from code.visual import visualization as vs
@@ -89,7 +90,12 @@ def run_best_gmm(data:list, gmm_params: pd.DataFrame, df: pd.DataFrame) -> pd.Da
                           verbose_interval=20
                           )
     gmm.fit(x_principal)
+
+
     vs.plot_gmm(gmm_model=gmm, data=x_principal)
     df["gmm_labels"] = gmm.predict(x_principal)
     return df
 
+def pic_fragment_for_close_reading(model: GaussianMixture):
+    centroids = model.means_
+    
