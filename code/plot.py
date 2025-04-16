@@ -12,6 +12,7 @@ from sklearn.cluster import AgglomerativeClustering
 from itertools import product
 from gensim.models import Word2Vec
 
-ev.compleate_evaluation(dir_with_models='files/models',
-                        ev_file='files/google.txt',
-                        test_words=[('good', 'bad'), ('game', 'theory')])
+os.chdir(r"C:/BA_thesis/BA_v2_31.03")
+
+df = pd.read_pickle('files/df_to_viz')
+vs.plot_dimentions(df)

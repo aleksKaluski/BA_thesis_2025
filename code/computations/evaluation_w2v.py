@@ -52,8 +52,13 @@ def evaluate_model(dir_with_models: str, ev_file: str, test_words: list) -> pd.D
                 similarity_scores.append(similarity_score)
             else:
                 print(f"Warning: Word {w1} or {w2} not found in the model vocabulary.")
+        if similarity_scores:
+            avg_score = statistics.mean(similarity_scores)
+        else:
+            avg_score = 0
+            print(f"No similarity scores found for this model [{model_list[i]}]. avg_score: {avg_score} ")
 
-        df.loc[len(df)] = [model_filenames[i], acc, statistics.mean(similarity_scores)]
+        df.loc[len(df)] = [model_filenames[i], acc, avg_score]
     return df
 
 
@@ -65,8 +70,8 @@ def evaluation_with_file(model, ev_file: str):
 
 
 def pick_the_best_model(df: pd.DataFrame):
-    vs.print_evalutaion_results(df)
     df.sort_values(by=['accuracy', 'similarity_score'], ascending=False, inplace=True)
+    vs.print_evalutaion_results(df)
     best_model = df.iloc[0]
 
     print(f"Best model: {best_model['model']}")

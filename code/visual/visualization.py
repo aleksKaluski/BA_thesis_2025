@@ -75,26 +75,45 @@ def plot_kminibatch(data: list, n_clusters: int, batch_size: int, colors: list =
 
 
 def print_evalutaion_results(df: pd.DataFrame):
+    # the best model is the first one
+
     cs = df["similarity_score"]
     acc = df["accuracy"]
     sns.set_theme(style="ticks")
 
     plt.figure(figsize=(8, 6))
-    sns.lineplot(data=df,
-                 x=cs,
-                 y=acc,
-                 hue="model",
-                 palette="hls",
-                 markers=True,
-                 style="model",
-                 dashes=False,
-                 linewidth=2,
-                 alpha=0.8)
+    sns.scatterplot(data=df,
+                    x=cs,
+                    y=acc,
+                    hue="model",
+                    palette="hls",
+                    s=100,
+                    alpha=0.8,
+                    legend=False)
 
-    plt.title("Evaluation results", fontsize=14, fontweight="bold")
+    best_row = df.iloc[0]
+    second_row = df.iloc[1]
+    third_row = df.iloc[2]
+
+    rows = [best_row, second_row, third_row]
+    for row in rows:
+        plt.scatter(row["similarity_score"],
+                    row["accuracy"],
+                    s=90,
+                    edgecolor='black',
+                    facecolor='red',
+                    linewidth=1)
+
+        plt.text(row["similarity_score"] + 0.005,
+                 row["accuracy"] - 0.0005,
+                 f"{row['model'].replace('.model', ' ')}",
+                 fontsize=9,
+                 color='black')
+
+    plt.title("Evaluation Results", fontsize=14, fontweight="bold")
     plt.xlabel("Mean similarity score for chosen word-pairs", fontsize=12, fontweight="bold")
     plt.ylabel("Accuracy score computed with Google test-set", fontsize=12, fontweight="bold")
-    plt.legend(title="Model", loc='best')
+    # plt.legend(title="Model", loc='best', prop={'size': 8})
     plt.tight_layout()
     plt.show()
 
@@ -112,7 +131,6 @@ def plot_dimentions(df: pd.DataFrame):
         sns.relplot(data=df,
                     x=x_principal['P1'],
                     y=x_principal['P2'],
-                    hue="group",
                     s=20,
                     alpha=0.8,
                     legend="auto")
@@ -173,11 +191,11 @@ def plot_hierachical_cluster(model, data: list, df: pd.DataFrame):
     plt.scatter(
         X_principal['P1'],
         X_principal['P2'],
-        c=model.fit_predict(X_principal[['P1', 'P2']]),  # Avoid using cluster label as input
+        c=model.fit_predict(X_principal[['P1', 'P2']]),
         cmap='rainbow',
         label='kmeans_cluster'
     )
-    plt.legend()  # No need to pass handles
+    plt.legend()
     plt.title('K-means Clustering (PCA-reduced)')
     plt.xlabel('Principal Component 1')
     plt.ylabel('Principal Component 2')

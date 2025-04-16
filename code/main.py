@@ -36,46 +36,46 @@ def main():
     """ 
     1) load the data
     """
-    start = time.perf_counter()
-    nlp = spacy.load("en_core_web_sm")
-    ld.load_data(dir_with_corpus_files=input_path,
-                 nlp=nlp,
-                 chunksize=40)
-    timings['load_data'] = time.perf_counter() - start
+    # start = time.perf_counter()
+    # nlp = spacy.load("en_core_web_sm")
+    # ld.load_data(dir_with_corpus_files=input_path,
+    #              nlp=nlp,
+    #              chunksize=40)
+    # timings['load_data'] = time.perf_counter() - start
 
 
     """
     2) create corpus
     """
-    start = time.perf_counter()
-    corpus = ld.TxtSubdirsCorpus("files/dfs")
-    timings['create_corpus'] = time.perf_counter() - start
+    # start = time.perf_counter()
+    # corpus = ld.TxtSubdirsCorpus("files/dfs")
+    # timings['create_corpus'] = time.perf_counter() - start
 
 
     """
     3) Train a few models
     """
-
-    start = time.perf_counter()
-    # Parameter grid
-    window = [1, 3]
-    epochs = [100]
-    sg = [0, 1]
-    vector_size = [100]
-
-    for w, e, s, v in product(window, epochs, sg, vector_size):
-        print(f'Training of w{w}e{e}sg{s}v{v} haas started.')
-        model = Word2Vec(
-            sentences=corpus,
-            window=w,
-            min_count=5,
-            epochs=e,
-            sg=s,
-            vector_size=v
-        )
-        model.save(f"files/models/w{w}e{e}sg{s}v{v}.model")
-
-    timings['train_models'] = time.perf_counter() - start
+    #
+    # start = time.perf_counter()
+    # # Parameter grid
+    # window = [1, 3]
+    # epochs = [100]
+    # sg = [0, 1]
+    # vector_size = [100]
+    #
+    # for w, e, s, v in product(window, epochs, sg, vector_size):
+    #     print(f'Training of w{w}e{e}sg{s}v{v} haas started.')
+    #     model = Word2Vec(
+    #         sentences=corpus,
+    #         window=w,
+    #         min_count=5,
+    #         epochs=e,
+    #         sg=s,
+    #         vector_size=v
+    #     )
+    #     model.save(f"files/models/w{w}e{e}sg{s}v{v}.model")
+    #
+    # timings['train_models'] = time.perf_counter() - start
 
     """
     4) Evaluate models
@@ -106,6 +106,7 @@ def main():
 
     # reduce the dimentions
     df = dm.reduce_dimentionality(vec, df)
+    df.to_pickle('files/df_to_viz')
 
     timings['reduce_dimensions'] = time.perf_counter() - start
 
