@@ -85,14 +85,6 @@ def main():
                                 ev_file='files/google.txt',
                                 test_words=[('good', 'bad'), ('game', 'theory')])
     timings['evaluate_models'] = time.perf_counter() - start
-    """
-    4) Evaluate models
-    """
-    start = time.perf_counter()
-    m = ev.compleate_evaluation(dir_with_models='files/models',
-                                ev_file='files/google.txt',
-                                test_words=[('good', 'bad'), ('game', 'theory')])
-    timings['evaluate_models'] = time.perf_counter() - start
 
     """
     5) Reduce dimentions

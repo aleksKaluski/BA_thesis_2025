@@ -74,26 +74,30 @@ def plot_kminibatch(data: list, n_clusters: int, batch_size: int, colors: list =
     plt.show()
 
 
-# TODO: make if properly for cumulative models
 def print_evalutaion_results(df: pd.DataFrame):
     cs = df["similarity_score"]
     acc = df["accuracy"]
     sns.set_theme(style="ticks")
-    p = sns.relplot(data=df,
-                    x=cs,
-                    y=acc,
-                    hue="model",
-                    palette="hls",
-                    s=100,
-                    alpha=0.8,
-                    legend="auto")
 
-    sns.move_legend(p, "center", title="Model:")
-    plt.title(f"Evalution results: ", fontsize=14, fontweight="bold")
+    plt.figure(figsize=(8, 6))
+    sns.lineplot(data=df,
+                 x=cs,
+                 y=acc,
+                 hue="model",
+                 palette="hls",
+                 markers=True,
+                 style="model",
+                 dashes=False,
+                 linewidth=2,
+                 alpha=0.8)
+
+    plt.title("Evaluation results", fontsize=14, fontweight="bold")
     plt.xlabel("Mean similarity score for chosen word-pairs", fontsize=12, fontweight="bold")
     plt.ylabel("Accuracy score computed with Google test-set", fontsize=12, fontweight="bold")
+    plt.legend(title="Model", loc='best')
     plt.tight_layout()
     plt.show()
+
 
 
 def plot_dimentions(df: pd.DataFrame):

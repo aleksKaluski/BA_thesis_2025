@@ -40,8 +40,8 @@ def evaluate_model(dir_with_models: str, ev_file: str, test_words: list) -> pd.D
     for i in range(len(model_list)):
         model = Word2Vec.load(model_list[i])
         acc = evaluation_with_file(model=model, ev_file=ev_file)
+        similarity_scores = []
         for x in range(len(test_words)):
-            similarity_scores = []
             w1 = test_words[x][0]
             w2 = test_words[x][1]
             # print(f"Evaluating {w1} and {w2} for model {model}")

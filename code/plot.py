@@ -11,3 +11,7 @@ import spacy
 from sklearn.cluster import AgglomerativeClustering
 from itertools import product
 from gensim.models import Word2Vec
+
+ev.compleate_evaluation(dir_with_models='files/models',
+                        ev_file='files/google.txt',
+                        test_words=[('good', 'bad'), ('game', 'theory')])
