@@ -11,8 +11,10 @@ import spacy
 from sklearn.cluster import AgglomerativeClustering
 from itertools import product
 from gensim.models import Word2Vec
+import hdbscan
+import matplotlib.pyplot as plt
 
-# required packages: pip install spacy pandas numpy ijson colorama matplotlib seaborn gensim umap-learn tqdm wordcloud scikit-learn
+# required packages: pip install spacy pandas numpy ijson colorama matplotlib seaborn gensim umap-learn tqdm wordcloud scikit-learn hdbscan
 # python -m spacy download en_core_web_sm
 
 import time
@@ -106,7 +108,7 @@ def main():
 
     # reduce the dimentions
     df = dm.reduce_dimentionality(vec, df)
-    df.to_pickle('files/df_to_viz')
+    # df.to_pickle('files/df_to_viz')
 
     timings['reduce_dimensions'] = time.perf_counter() - start
 
@@ -163,6 +165,22 @@ def main():
 
 
     timings['clustering'] = time.perf_counter() - start
+
+    """
+    7.4) Clustering with HDBSCAN
+    """
+    hdb = hdbscan.HDBSCAN(min_cluster_size=30, gen_min_span_tree=True)
+    hdb.fit(data)
+    hdb.minimum_spanning_tree_.plot(edge_cmap='viridis',
+                                    edge_alpha=0.6,
+                                    node_size=80,
+                                    edge_linewidth=2)
+    plt.show()
+    hdb.single_linkage_tree_.plot(cmap='viridis', colorbar=True)
+    plt.show()
+
+
+
 
     """
     8) Plot wordclouds for each cluster
