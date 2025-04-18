@@ -15,4 +15,12 @@ from gensim.models import Word2Vec
 os.chdir(r"C:/BA_thesis/BA_v2_31.03")
 
 df = pd.read_pickle('files/df_to_viz')
-vs.plot_dimentions(df)
+
+data = df[[x for x in df.columns if x.startswith('Dim ')]]
+
+ahc = AgglomerativeClustering(n_clusters=4,
+                              metric='euclidean',
+                              compute_distances=True)
+
+ac_clusters = ahc.fit(data)
+vs.plot_dendrogram(ac_clusters, truncate_mode="level", p=3)
