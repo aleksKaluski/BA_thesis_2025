@@ -101,8 +101,8 @@ def prepare_data_frame(input_path: str, nlp: spacy.Language, chunksize: int = 10
                                 })
 
                     df = pd.DataFrame(rows)
-                    with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
-                        print(df)
+                    # with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
+                    #     print(df)
                     output_file_name = output_file_name + f'_{name_number}_prp.pkl'
                     output_path = os.path.join(folder_path, output_file_name)
                     print(f"Tagging done. Saving the file to {output_path}")
