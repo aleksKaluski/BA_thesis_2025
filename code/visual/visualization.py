@@ -173,7 +173,6 @@ def plot_dimentions(df: pd.DataFrame):
 
 
 def plot_dendrogram(model, **kwargs):
-    # create the counts of samples under each node
     counts = np.zeros(model.children_.shape[0])
     n_samples = len(model.labels_)
     for i, merge in enumerate(model.children_):
@@ -190,33 +189,14 @@ def plot_dendrogram(model, **kwargs):
     ).astype(float)
 
     # Plot the corresponding dendrogram
-    plt.title("Hierarchical Clustering Dendrogram")
+    plt.figure(figsize=(10, 5))
     dendrogram(linkage_matrix, **kwargs)
-    plt.xlabel("Number of points in node (or index of point if no parenthesis).")
+    plt.title("Hierarchical Clustering Dendrogram")
+    plt.xlabel("Sample index")
+    plt.ylabel("Distance")
+    plt.tight_layout()
     plt.show()
 
-
-def plot_hierachical_cluster(model, data: list, df: pd.DataFrame):
-    pca = PCA(n_components=2)
-    X_principal = pca.fit_transform(data)
-    X_principal = pd.DataFrame(X_principal, columns=['P1', 'P2'])
-
-    # Optional: add cluster info to the PCA DataFrame
-    X_principal['kmeans_cluster'] = df['kmeans_cluster'].values
-
-    plt.figure(figsize=(6, 6))
-    plt.scatter(
-        X_principal['P1'],
-        X_principal['P2'],
-        c=model.fit_predict(X_principal[['P1', 'P2']]),
-        cmap='rainbow',
-        label='kmeans_cluster'
-    )
-    plt.legend()
-    plt.title('K-means Clustering (PCA-reduced)')
-    plt.xlabel('Principal Component 1')
-    plt.ylabel('Principal Component 2')
-    plt.show()
 
 
 def plot_gmm(gmm_model, data: list):
