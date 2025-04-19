@@ -13,6 +13,7 @@ from itertools import product
 from gensim.models import Word2Vec
 import hdbscan
 import matplotlib.pyplot as plt
+import optuna
 
 # required packages: pip install spacy pandas numpy ijson colorama matplotlib seaborn gensim umap-learn tqdm wordcloud scikit-learn hdbscan
 # python -m spacy download en_core_web_sm
@@ -20,73 +21,60 @@ import matplotlib.pyplot as plt
 import time
 from memory_profiler import profile
 
-#TODO:
-# - znajdź cenrroidy
-# - dodaj gensim bigrams - nope
-# - popraw wykresy
-# - merytoryczny upgrade
 
 def main():
-    timings = {}
-
     os.chdir(r"C:/BA_thesis/BA_v2_31.03")
 
     print(f"working directory: {os.getcwd()}")
     input_path = os.getcwd() + '/files/corpus_data'
 
-
     """ 
     1) load the data
     """
-    start = time.perf_counter()
+
     nlp = spacy.load("en_core_web_sm")
     ld.load_data(dir_with_corpus_files=input_path,
                  nlp=nlp,
                  chunksize=40)
-    timings['load_data'] = time.perf_counter() - start
-
 
     """
     2) create corpus
     """
-    start = time.perf_counter()
     corpus = ld.TxtSubdirsCorpus("files/dfs")
-    timings['create_corpus'] = time.perf_counter() - start
-
 
     """
-    3) Train a few models
+    3) Train a few models and find the best one with optuna
     """
+    ev_metricts = pd.DataFrame(columns=['model', 'accuracy', 'similarity_score'])
 
-    start = time.perf_counter()
-    # Parameter grid
-    window = [1, 3]
-    epochs = [100]
-    sg = [0, 1]
-    vector_size = [100]
-
-    for w, e, s, v in product(window, epochs, sg, vector_size):
-        print(f'Training of w{w}e{e}sg{s}v{v} haas started.')
-        model = Word2Vec(
+    def train_w2v_models(trial):
+        window = trial.suggest_int("window", 2, 3)
+        epochs = trial.suggest_int("epochs", 100, 150)
+        sg = trial.suggest_int("sg", 0, 1)
+        vector_size = trial.suggest_int("vector_size", 100, 120)
+        print(f'\nTraining of w{window}e{epochs}sg{sg}v{vector_size} has started.')
+        w2v = Word2Vec(
             sentences=corpus,
-            window=w,
+            window=window,
             min_count=5,
-            epochs=e,
-            sg=s,
-            vector_size=v
+            epochs=epochs,
+            sg=sg,
+            vector_size=vector_size
         )
-        model.save(f"files/models/w{w}e{e}sg{s}v{v}.model")
 
-    timings['train_models'] = time.perf_counter() - start
+        e = ev.evaluate_model(w2v,
+                              ev_file='files/google.txt',
+                              test_words=[('good', 'bad'), ('game', 'theory')])
 
-    """
-    4) Evaluate models
-    """
-    start = time.perf_counter()
-    m = ev.compleate_evaluation(dir_with_models='files/models',
-                                ev_file='files/google.txt',
-                                test_words=[('good', 'bad'), ('game', 'theory')])
-    timings['evaluate_models'] = time.perf_counter() - start
+        return e[0]
+
+    study = optuna.create_study(direction="maximize")
+    study.optimize(train_w2v_models, n_trials=3)
+
+    trial = study.best_trial
+
+    print("\nAccuracy: {}".format(trial.value))
+    print("Best hyperparameters: {}".format(trial.params))
 
     """
     5) Reduce dimentions
@@ -105,13 +93,11 @@ def main():
     # extract the dimentions for reduction
     vec = dm.x_from_df(df, 'vector')
 
-
     # reduce the dimentions
     df = dm.reduce_dimentionality(vec, df)
     # df.to_pickle('files/df_to_viz')
 
     timings['reduce_dimensions'] = time.perf_counter() - start
-
 
     """
     6) visualize the document distance
@@ -121,7 +107,6 @@ def main():
     # df = pd.read_pickle("files/df_red.pkl")
     vs.plot_dimentions(df)
     timings['plot_dimensions'] = time.perf_counter() - start
-
 
     """
     7) cluster the documents
@@ -150,7 +135,6 @@ def main():
     df = cl.run_best_gmm(data, best_gmm, df)
     print(df.head())
 
-
     """
     7.3) Hierarchical clustering
     """
@@ -162,7 +146,6 @@ def main():
 
     ac_clusters = ahc.fit(data)
     vs.plot_dendrogram(ac_clusters, truncate_mode="level", p=3)
-
 
     timings['clustering'] = time.perf_counter() - start
 
@@ -179,9 +162,6 @@ def main():
     hdb.single_linkage_tree_.plot(cmap='viridis', colorbar=True)
     plt.show()
 
-
-
-
     """
     8) Plot wordclouds for each cluster
     """
@@ -189,13 +169,13 @@ def main():
     wd.divide_and_plot(df, "gmm_labels")
     timings['wordclouds'] = time.perf_counter() - start
 
-
     with pd.option_context('display.max_rows', 10, 'display.max_columns', None, 'display.width', 500):
         print(df)
 
     print("\nTIME REPORT")
     for step, seconds in timings.items():
         print(f"{step:>20}: {seconds:.2f} s")
+
 
 if __name__ == '__main__':
     main()

@@ -84,18 +84,20 @@ def plot_kminibatch(data: list, n_clusters: int, batch_size: int, colors: list =
     plt.show()
 
 
-def print_evalutaion_results(df: pd.DataFrame):
+def print_w2v_evalutaion_results(df: pd.DataFrame, external_sim_score: str, internal_sim_score: str, model_name: str):
     # the best model is the first one
 
-    cs = df["similarity_score"]
-    acc = df["accuracy"]
+    ess = external_sim_score
+    print(f"ess: {ess}")
+    iss = internal_sim_score
+    print(f"iss: {iss}")
     sns.set_theme(style="ticks")
 
     plt.figure(figsize=(8, 6))
     sns.scatterplot(data=df,
-                    x=cs,
-                    y=acc,
-                    hue="model",
+                    x=iss,
+                    y=ess,
+                    hue=model_name,
                     palette="hls",
                     s=100,
                     alpha=0.8,
@@ -107,16 +109,16 @@ def print_evalutaion_results(df: pd.DataFrame):
 
     rows = [best_row, second_row, third_row]
     for row in rows:
-        plt.scatter(row["similarity_score"],
-                    row["accuracy"],
+        plt.scatter(row[iss],
+                    row[ess],
                     s=90,
                     edgecolor='black',
                     facecolor='red',
                     linewidth=1)
 
-        plt.text(row["similarity_score"] + 0.005,
-                 row["accuracy"] - 0.0005,
-                 f"{row['model'].replace('.model', ' ')}",
+        plt.text(row[iss] + 0.005,
+                 row[ess] - 0.0005,
+                 f"{row[model_name]}",
                  fontsize=9,
                  color='black')
 
