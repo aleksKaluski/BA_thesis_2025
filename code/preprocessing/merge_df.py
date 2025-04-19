@@ -13,8 +13,6 @@ def iter_large_df(top_dir):
     for root, _, files in os.walk(top_dir):
         for file in files:
             if file.endswith(".pkl"):
-                print(f"\nProcessing file: {file}")
-                print('-' * 50)
                 file_path = os.path.join(root, file)
                 df = pd.read_pickle(file_path)
                 for _, row in df.iterrows():
@@ -30,7 +28,7 @@ def merge_df(dir_dfs: str) -> pd.DataFrame:
 
     # temporary date container
     d = []
-    for r in tqdm(gen):
+    for r in gen:
         d.append([
             r["clean_text"],
             r["semantic_id"],
@@ -39,6 +37,5 @@ def merge_df(dir_dfs: str) -> pd.DataFrame:
         ])
 
     df_full = pd.DataFrame(d, columns=["clean_text", "semantic_id", "date", "group"])
-    print("\nDfs merged sucesfully! New df stats:")
-    print(df_full.info())
+    print("\nDfs merged sucesfully!")
     return df_full

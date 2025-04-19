@@ -84,7 +84,6 @@ def prepare_data_frame(input_path: str, nlp: spacy.Language, chunksize: int = 10
                 metadata.append((date, semantic_id, group))
 
                 if len(texts) >= chunksize:
-                    print(f'{len(texts)} > {chunksize} of {input_path.name}')
                     docs = nlp.pipe(texts, batch_size=10, disable=["ner", "parser"])
 
                     # zip for interation on docs and meta

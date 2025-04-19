@@ -25,55 +25,57 @@ from memory_profiler import profile
 def main():
     os.chdir(r"C:/BA_thesis/BA_v2_31.03")
 
-    print(f"working directory: {os.getcwd()}")
-    input_path = os.getcwd() + '/files/corpus_data'
-
-    """ 
-    1) load the data
-    """
-
-    # nlp = spacy.load("en_core_web_sm")
-    # ld.load_data(dir_with_corpus_files=input_path,
-    #              nlp=nlp,
-    #              chunksize=40)
-
-    """
-    2) create corpus
-    """
-    corpus = ld.TxtSubdirsCorpus("files/dfs")
-
-    """
-    3) Train a few models and find the best one with optuna
-    """
-    ev_metric = ev.find_best_params_w2v(corpus=corpus,
-                                        n_trials=5)
-
-    vs.print_w2v_evalutaion_results(df=ev_metric,
-                                    external_sim_score='external_accuracy',
-                                    internal_sim_score='custom_sim_score',
-                                    model_name='model_name')
-
-    best_params = ev.get_best_params(df=ev_metric,
-                                     external_sim_score='external_accuracy',
-                                     internal_sim_score='custom_sim_score')
-
-    epochs = best_params['params_epochs']
-    sg = best_params['params_sg']
-    vector_size = best_params['params_vector_size']
-    window = best_params['params_window']
-
-    model = Word2Vec(
-        sentences=corpus,
-        window=window,
-        min_count=5,
-        epochs=epochs,
-        sg=sg,
-        vector_size=vector_size
-    )
+    # print(f"working directory: {os.getcwd()}")
+    # input_path = os.getcwd() + '/files/corpus_data'
+    #
+    # """
+    # 1) load the data
+    # """
+    #
+    # # nlp = spacy.load("en_core_web_sm")
+    # # ld.load_data(dir_with_corpus_files=input_path,
+    # #              nlp=nlp,
+    # #              chunksize=40)
+    #
+    # """
+    # 2) create corpus
+    # """
+    # corpus = ld.TxtSubdirsCorpus("files/dfs")
+    #
+    # """
+    # 3) Train a few models and find the best one with optuna
+    # """
+    # ev_metric = ev.find_best_params_w2v(corpus=corpus,
+    #                                     n_trials=5)
+    #
+    # vs.plot_w2v_evalutaion_results(df=ev_metric,
+    #                                external_sim_score='external_accuracy',
+    #                                internal_sim_score='custom_sim_score',
+    #                                model_name='model_name')
+    #
+    # best_params = ev.get_best_params(df=ev_metric,
+    #                                  external_sim_score='external_accuracy',
+    #                                  internal_sim_score='custom_sim_score')
+    #
+    # epochs = best_params['params_epochs']
+    # sg = best_params['params_sg']
+    # vector_size = best_params['params_vector_size']
+    # window = best_params['params_window']
+    #
+    # model = Word2Vec(
+    #     sentences=corpus,
+    #     window=window,
+    #     min_count=5,
+    #     epochs=epochs,
+    #     sg=sg,
+    #     vector_size=vector_size
+    # )
+    # model.save(f"files/models/w{window}e{epochs}sg{sg}v{vector_size}_best.model")
 
     """
     4) Reduce dimentions
     """
+    model = Word2Vec.load('files/models/w3e127sg1v115_best.model')
     df = mf.merge_df('files/dfs')
 
     # add vector represenation to each text
@@ -91,26 +93,24 @@ def main():
     """
     5) visualize the document distance
     """
+    data = df[[x for x in df.columns if x.startswith('Dim ')]]
+    vs.plot_dimentions(data)
 
-    vs.plot_dimentions(df)
+    """
+    6) cluster the documents
+    """
 
-    # """
-    # 7) cluster the documents
-    # """
-    # start = time.perf_counter()
-    # data = df[[x for x in df.columns if x.startswith('Dim ')]]
-    #
-    # """
-    # 7.1) Perform mini-batch for finding the right number of clusters
-    # """
-    # best_kminibatch = cl.find_best_kminibatch(data=data,
-    #                                           cluster_grid=[2, 3, 4],
-    #                                           batch_size_grid=[10, 20])
-    #
-    # vs.plot_kminibatch(data=data,
-    #                    n_clusters=best_kminibatch['n_clusters'],
-    #                    batch_size=best_kminibatch['batch_size'])
-    #
+    """
+    6.1) Perform mini-batch for finding the right number of clusters
+    """
+    best_kminibatch = cl.find_best_kminibatch(data=data,
+                                              cluster_grid=[2, 3, 4],
+                                              batch_size_grid=[10, 20])
+
+    vs.plot_kminibatch(data=data,
+                       n_clusters=best_kminibatch['n_clusters'],
+                       batch_size=best_kminibatch['batch_size'])
+
     # """
     # 7.2) clustering with Gaussian Mixtures
     # """
