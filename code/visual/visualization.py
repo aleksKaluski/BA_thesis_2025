@@ -86,6 +86,7 @@ def plot_kminibatch(data: list, n_clusters: int, batch_size: int, colors: list =
 
 def print_w2v_evalutaion_results(df: pd.DataFrame, external_sim_score: str, internal_sim_score: str, model_name: str):
     # the best model is the first one
+    df = df.sort_values(by=[external_sim_score, internal_sim_score], ascending=False)
 
     ess = external_sim_score
     print(f"ess: {ess}")

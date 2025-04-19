@@ -76,7 +76,7 @@ def reduce_dimentionality(df_vectors: pd.DataFrame,
         embedded_dict[f"Dim {i + 1}"] = embeding_matrix[:, i]
 
     dfe = pd.DataFrame(embedded_dict, index=df_normal.index)
-    del (embedded_dict)
+    del(embedded_dict)
     projected = df_normal.join(dfe)
 
     return projected
