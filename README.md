@@ -28,3 +28,10 @@ This repository contains a complete pipeline for processing, embedding, and clus
   * HDBSCAN — density-based clustering.
 
 6) Visualize the contents of individual clusters using word clouds.
+
+DISCLAIMER: not all the sources of code are inlncluded here (work in progress)
+
+**Sources**
+* https://github.com/JonasTriki/masters-thesis-ml/tree/master
+* https://programminghistorian.org/en/lessons/clustering-visualizing-word-embeddings
+* https://programminghistorian.org/en/lessons/clustering-with-scikit-learn-in-python
