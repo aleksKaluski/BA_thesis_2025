@@ -25,52 +25,52 @@ from memory_profiler import profile
 def main():
     os.chdir(r"C:/BA_thesis/BA_v2_31.03")
 
-    # print(f"working directory: {os.getcwd()}")
-    # input_path = os.getcwd() + '/files/corpus_data'
-    #
-    # """
-    # 1) load the data
-    # """
-    #
-    # # nlp = spacy.load("en_core_web_sm")
-    # # ld.load_data(dir_with_corpus_files=input_path,
-    # #              nlp=nlp,
-    # #              chunksize=40)
-    #
-    # """
-    # 2) create corpus
-    # """
-    # corpus = ld.TxtSubdirsCorpus("files/dfs")
-    #
-    # """
-    # 3) Train a few models and find the best one with optuna
-    # """
-    # ev_metric = ev.find_best_params_w2v(corpus=corpus,
-    #                                     n_trials=5)
-    #
-    # vs.plot_w2v_evalutaion_results(df=ev_metric,
-    #                                external_sim_score='external_accuracy',
-    #                                internal_sim_score='custom_sim_score',
-    #                                model_name='model_name')
-    #
-    # best_params = ev.get_best_params(df=ev_metric,
-    #                                  external_sim_score='external_accuracy',
-    #                                  internal_sim_score='custom_sim_score')
-    #
-    # epochs = best_params['params_epochs']
-    # sg = best_params['params_sg']
-    # vector_size = best_params['params_vector_size']
-    # window = best_params['params_window']
-    #
-    # model = Word2Vec(
-    #     sentences=corpus,
-    #     window=window,
-    #     min_count=5,
-    #     epochs=epochs,
-    #     sg=sg,
-    #     vector_size=vector_size
-    # )
-    # model.save(f"files/models/w{window}e{epochs}sg{sg}v{vector_size}_best.model")
+    print(f"working directory: {os.getcwd()}")
+    input_path = os.getcwd() + '/files/corpus_data'
+
+    """
+    1) load the data
+    """
+
+    nlp = spacy.load("en_core_web_sm")
+    ld.load_data(dir_with_corpus_files=input_path,
+                 nlp=nlp,
+                 chunksize=40)
+
+    """
+    2) create corpus
+    """
+    corpus = ld.TxtSubdirsCorpus("files/dfs")
+
+    """
+    3) Train a few models and find the best one with optuna
+    """
+    ev_metric = ev.find_best_params_w2v(corpus=corpus,
+                                        n_trials=5)
+
+    vs.plot_w2v_evalutaion_results(df=ev_metric,
+                                   external_sim_score='external_accuracy',
+                                   internal_sim_score='custom_sim_score',
+                                   model_name='model_name')
+
+    best_params = ev.get_best_params(df=ev_metric,
+                                     external_sim_score='external_accuracy',
+                                     internal_sim_score='custom_sim_score')
+
+    epochs = best_params['params_epochs']
+    sg = best_params['params_sg']
+    vector_size = best_params['params_vector_size']
+    window = best_params['params_window']
+
+    model = Word2Vec(
+        sentences=corpus,
+        window=window,
+        min_count=5,
+        epochs=epochs,
+        sg=sg,
+        vector_size=vector_size
+    )
+    model.save(f"files/models/w{window}e{epochs}sg{sg}v{vector_size}_best.model")
 
     """
     4) Reduce dimentions
@@ -111,56 +111,49 @@ def main():
                        n_clusters=best_kminibatch['n_clusters'],
                        batch_size=best_kminibatch['batch_size'])
 
-    # """
-    # 7.2) clustering with Gaussian Mixtures
-    # """
-    #
-    # n = int(best_kminibatch['n_clusters'])
-    # best_gmm = cl.find_best_gmm(data, n)
-    #
-    # df = cl.run_best_gmm(data, best_gmm, df)
-    # print(df.head())
-    #
-    # """
-    # 7.3) Hierarchical clustering
-    # """
-    #
-    # # AgglomerativeC clustering
-    # ahc = AgglomerativeClustering(n_clusters=n,
-    #                               metric='euclidean',
-    #                               compute_distances=True)
-    #
-    # ac_clusters = ahc.fit(data)
-    # vs.plot_dendrogram(ac_clusters, truncate_mode="level", p=3)
-    #
-    # timings['clustering'] = time.perf_counter() - start
-    #
-    # """
-    # 7.4) Clustering with HDBSCAN
-    # """
-    # hdb = hdbscan.HDBSCAN(min_cluster_size=30, gen_min_span_tree=True)
-    # hdb.fit(data)
-    # hdb.minimum_spanning_tree_.plot(edge_cmap='viridis',
-    #                                 edge_alpha=0.6,
-    #                                 node_size=80,
-    #                                 edge_linewidth=2)
-    # plt.show()
-    # hdb.single_linkage_tree_.plot(cmap='viridis', colorbar=True)
-    # plt.show()
-    #
-    # """
-    # 8) Plot wordclouds for each cluster
-    # """
-    # start = time.perf_counter()
-    # wd.divide_and_plot(df, "gmm_labels")
-    # timings['wordclouds'] = time.perf_counter() - start
-    #
-    # with pd.option_context('display.max_rows', 10, 'display.max_columns', None, 'display.width', 500):
-    #     print(df)
-    #
-    # print("\nTIME REPORT")
-    # for step, seconds in timings.items():
-    #     print(f"{step:>20}: {seconds:.2f} s")
+    """
+    7.2) clustering with Gaussian Mixtures
+    """
+
+    n = int(best_kminibatch['n_clusters'])
+    best_gmm = cl.find_best_gmm(data, n)
+
+    df = cl.run_best_gmm(data, best_gmm, df)
+    print(df.head())
+
+    """
+    7.3) Hierarchical clustering
+    """
+
+    # AgglomerativeC clustering
+    ahc = AgglomerativeClustering(n_clusters=n,
+                                  metric='euclidean',
+                                  compute_distances=True)
+
+    ac_clusters = ahc.fit(data)
+    vs.plot_dendrogram(ac_clusters, truncate_mode="level", p=3)
+
+
+    """
+    7.4) Clustering with HDBSCAN
+    """
+    hdb = hdbscan.HDBSCAN(min_cluster_size=30, gen_min_span_tree=True)
+    hdb.fit(data)
+    hdb.minimum_spanning_tree_.plot(edge_cmap='viridis',
+                                    edge_alpha=0.6,
+                                    node_size=80,
+                                    edge_linewidth=2)
+    plt.show()
+    hdb.single_linkage_tree_.plot(cmap='viridis', colorbar=True)
+    plt.show()
+
+    """
+    8) Plot wordclouds for each cluster
+    """
+    wd.divide_and_plot(df, "gmm_labels")
+
+    with pd.option_context('display.max_rows', 10, 'display.max_columns', None, 'display.width', 500):
+        print(df)
 
 
 if __name__ == '__main__':
