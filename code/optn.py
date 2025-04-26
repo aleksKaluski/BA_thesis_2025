@@ -17,7 +17,26 @@ import optuna
 
 os.chdir(r"C:/BA_thesis/BA_v2_31.03")
 
-print(f"working directory: {os.getcwd()}")
-input_path = os.getcwd() + '/files/corpus_data'
+# model = Word2Vec.load('files/models/w3e127sg1v115_best.model')
+#
+# # add vector represenation to each text
+# dm.add_document_vector(df, model)
+#
+# # extract the dimentions for reduction
+# vec = dm.x_from_df(df, 'vector')
+# print(vec.head())
+#
+# # reduce the dimentions
+# df = dm.reduce_dimentionality(df_vectors=vec,
+#                               df_normal=df,
+#                               rdims=2)
 
-corpus = ld.TxtSubdirsCorpus("files/dfs")
+df = pd.read_pickle('files/df_to_viz')
+print(df.head())
+
+data = df[[x for x in df.columns if x.startswith('Dim ')]]
+print(data)
+
+vs.plot_kminibatch(data=data,
+                   n_clusters=4,
+                   batch_size=50)

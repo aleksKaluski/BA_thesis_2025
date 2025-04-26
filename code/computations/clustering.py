@@ -95,7 +95,3 @@ def run_best_gmm(data:list, gmm_params: pd.DataFrame, df: pd.DataFrame) -> pd.Da
     vs.plot_gmm(gmm_model=gmm, data=x_principal)
     df["gmm_labels"] = gmm.predict(x_principal)
     return df
-
-def pic_fragment_for_close_reading(model: GaussianMixture):
-    centroids = model.means_
-    

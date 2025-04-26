@@ -62,7 +62,8 @@ def reduce_dimentionality(df_vectors: pd.DataFrame,
         n_neighbors=neighbors,
         min_dist=min_dist,
         n_components=rdims,
-        random_state=rs)
+        random_state=rs,
+        n_jobs=2)
 
     df_normal = df_normal.reset_index(drop=True)
     df_vectors = df_vectors.reset_index(drop=True)

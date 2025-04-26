@@ -99,20 +99,28 @@ def plot_dimentions(data: list, rdims: int = 2):
         print(f"Data is not a list!")
 
 
-def plot_kminibatch(data: list, n_clusters: int, batch_size: int, colors: list = None):
-    if colors:
-        assert len(colors) == n_clusters, F"len(colors) {len(colors)} != {n_clusters} n_clusters"
+def plot_kminibatch(data: list, n_clusters: int, batch_size: int, rdims: int = 2, colors: list = None):
+    if colors is None:
+        colors = []
+    if rdims > 2:
+        # reduce dimentions for visualization
+        pca = PCA(n_components=2)
+        x_principal = pca.fit_transform(data)
+        x_principal = pd.DataFrame(x_principal, columns=['Dim 1', 'Dim 2'])
+        title = "MiniBatchKMeans results after PCA reduction"
+
+    elif rdims == 2:
+        x_principal = data
+        title = "MiniBatchKMeans clustering results"
+    else:
+        raise ValueError("rdims must be 2 or more!")
+
 
     n_clusters = int(n_clusters)
     batch_size = int(batch_size)
 
-    # reduce dimentions for visualization
-    pca = PCA(n_components=2)
-    x_principal = pca.fit_transform(data)
-    x_principal = pd.DataFrame(x_principal, columns=['P1', 'P2'])
-
     # convert to numpy
-    x_principal = x_principal.to_numpy()
+    # x_principal = x_principal.to_numpy()
 
     kmeans = MiniBatchKMeans(n_clusters=n_clusters,
                              random_state=0,
@@ -120,17 +128,18 @@ def plot_kminibatch(data: list, n_clusters: int, batch_size: int, colors: list =
                              n_init="auto")
 
     kmeans.fit(x_principal)
+    x_principal = x_principal.to_numpy()
 
     # centroids
     k_centers = kmeans.cluster_centers_
     k_labels = kmeans.labels_
 
     # generate colors randomly
-    if colors is None:
+    if colors == []:
         colors = [np.random.rand(3, ) for _ in range(n_clusters)]
         palette = colors
     else:
-        assert len(colors) == n_clusters
+        assert len(colors) == n_clusters, f"len(colors) {len(colors)} != {n_clusters} n_clusters"
         palette = colors
 
     plt.figure(figsize=(8, 6))
@@ -161,17 +170,12 @@ def plot_kminibatch(data: list, n_clusters: int, batch_size: int, colors: list =
                     linewidths=1,
                     s=70)
     plt.legend(loc="best", fontsize=9, frameon=True, title="Clusters")
-    plt.title(f"MiniBatchKMeans results after PCA reduction ", fontsize=14, fontweight="bold")
+    plt.title(title, fontsize=14, fontweight="bold")
     plt.xlabel("Dimention no.1", fontsize=12, fontweight="bold")
     plt.ylabel("Dimention no.2", fontsize=12, fontweight="bold")
     plt.axis("equal")
     plt.tight_layout()
     plt.show()
-
-
-
-
-
 
 
 def plot_dendrogram(model, **kwargs):
@@ -200,9 +204,7 @@ def plot_dendrogram(model, **kwargs):
     plt.show()
 
 
-
 def plot_gmm(gmm_model, data: list):
-
     x_principal = pd.DataFrame(data, columns=['P1', 'P2'])
 
     #TODO: fix the size of the plot
