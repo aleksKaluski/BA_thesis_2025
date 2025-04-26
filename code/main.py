@@ -85,9 +85,9 @@ def main():
     vec = dm.x_from_df(df, 'vector')
 
     # reduce the dimentions
-    df = dm.reduce_dimentionality(df_vectors=vec,
-                                  df_normal=df,
-                                  rdims=2)
+    df = dm.reduce_dimentionality_umap(df_vectors=vec,
+                                       df_normal=df,
+                                       rdims=2)
 
 
     """

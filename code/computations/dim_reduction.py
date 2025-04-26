@@ -6,6 +6,8 @@ import numpy as np
 
 # case-specific
 import umap
+from sklearn.decomposition import PCA
+
 
 # count the mean vector of a doc
 def document_vector(word2vec_model, doc_tokens):
@@ -45,15 +47,13 @@ def x_from_df(df: pd.DataFrame, col: str = 'Embedding') -> pd.DataFrame:
             print(f"You passed a string {df} as a df, but it's neither a file, nor a dataframe.")
 
 
-
-def reduce_dimentionality(df_vectors: pd.DataFrame,
-                          df_normal: pd.DataFrame,
-                          seed: int = 43,
-                          dmeasure: str = 'euclidean',
-                          rdims: int = 4,
-                          min_dist: float = 0.01,
-                          neighbors: int = 25) -> pd.DataFrame:
-
+def reduce_dimentionality_umap(df_vectors: pd.DataFrame,
+                               df_normal: pd.DataFrame,
+                               seed: int = 43,
+                               dmeasure: str = 'euclidean',
+                               rdims: int = 4,
+                               min_dist: float = 0.01,
+                               neighbors: int = 25) -> pd.DataFrame:
     print(f"UMAP dimensionality reduction to {rdims} dimensions with '{dmeasure}' distance measure.")
 
     # random seed
@@ -77,7 +77,23 @@ def reduce_dimentionality(df_vectors: pd.DataFrame,
         embedded_dict[f"Dim {i + 1}"] = embeding_matrix[:, i]
 
     dfe = pd.DataFrame(embedded_dict, index=df_normal.index)
-    del(embedded_dict)
+    del (embedded_dict)
     projected = df_normal.join(dfe)
 
     return projected
+
+
+def reduce_dims_with_PCA(data, input_rdims, output_rdims):
+
+    if not isinstance(data, pd.DataFrame):
+        raise TypeError(f"Expected data to be pd.DataFrame, got {type(data)} instead.")
+    if input_rdims > 2:
+        print(f"Reducing dimentions with PCA from {input_rdims} to {output_rdims}...")
+        pca = PCA(n_components=output_rdims)
+        x_principal = pca.fit_transform(data)
+        x_principal = pd.DataFrame(x_principal, columns=['Dim 1', 'Dim 2'])
+        return x_principal
+    elif input_rdims == 2:
+        return data
+    else:
+        raise ValueError("Unexpected input_rdims or output_rdims combination.")

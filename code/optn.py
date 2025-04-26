@@ -17,6 +17,8 @@ import optuna
 
 os.chdir(r"C:/BA_thesis/BA_v2_31.03")
 
+# df = pd.read_pickle('files/dfs/religion_0_prp.pkl')
+#
 # model = Word2Vec.load('files/models/w3e127sg1v115_best.model')
 #
 # # add vector represenation to each text
@@ -27,16 +29,17 @@ os.chdir(r"C:/BA_thesis/BA_v2_31.03")
 # print(vec.head())
 #
 # # reduce the dimentions
-# df = dm.reduce_dimentionality(df_vectors=vec,
+# df = dm.reduce_dimentionality_umap(df_vectors=vec,
 #                               df_normal=df,
 #                               rdims=2)
 
 df = pd.read_pickle('files/df_to_viz')
-print(df.head())
-
 data = df[[x for x in df.columns if x.startswith('Dim ')]]
-print(data)
+data_2dims = dm.reduce_dims_with_PCA(data=data,
+                                     input_rdims=4,
+                                     output_rdims=2)
 
-vs.plot_kminibatch(data=data,
-                   n_clusters=4,
-                   batch_size=50)
+
+best_gmm = cl.find_best_gmm(data_2dims, 3)
+model = cl.run_best_gmm(data_2dims, best_gmm)
+vs.plot_gmm(model, data_2dims)

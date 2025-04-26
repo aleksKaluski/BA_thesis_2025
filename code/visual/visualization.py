@@ -115,7 +115,6 @@ def plot_kminibatch(data: list, n_clusters: int, batch_size: int, rdims: int = 2
     else:
         raise ValueError("rdims must be 2 or more!")
 
-
     n_clusters = int(n_clusters)
     batch_size = int(batch_size)
 
@@ -205,9 +204,8 @@ def plot_dendrogram(model, **kwargs):
 
 
 def plot_gmm(gmm_model, data: list):
-    x_principal = pd.DataFrame(data, columns=['P1', 'P2'])
 
-    #TODO: fix the size of the plot
+    x_principal = pd.DataFrame(data, columns=['Dim 1', 'Dim 2'])
     x = np.linspace(-20.0, 30.0)
     y = np.linspace(-20.0, 40.0)
     X, Y = np.meshgrid(x, y)
@@ -219,7 +217,7 @@ def plot_gmm(gmm_model, data: list):
         X, Y, Z, norm=LogNorm(vmin=1.0, vmax=1000.0), levels=np.logspace(0, 3, 10)
     )
     CB = plt.colorbar(CS, shrink=0.8, extend="both")
-    plt.scatter(x_principal["P1"], x_principal["P2"], s=0.8)
+    plt.scatter(x_principal["Dim 1"], x_principal["Dim 2"], s=0.8)
 
     plt.title("Negative log-likelihood predicted by a GMM")
     plt.axis("tight")
