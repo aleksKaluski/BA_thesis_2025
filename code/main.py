@@ -1,6 +1,6 @@
-from code.visual import visualization as vs, word_clouds as wd
+from code.visual import visualization as vs
 from code.preprocessing import load_data as ld, merge_df as mf
-from code.computations import evaluation_w2v as ev, clustering as cl, dim_reduction as dm
+from code.computations import evaluation_w2v as ev, clustering as cl, dim_reduction as dm, word_clouds as wd
 
 # basic
 import os
@@ -9,17 +9,13 @@ import pandas as pd
 # case_specific
 import spacy
 from sklearn.cluster import AgglomerativeClustering
-from itertools import product
 from gensim.models import Word2Vec
 import hdbscan
 import matplotlib.pyplot as plt
-import optuna
+
 
 # required packages: pip install spacy pandas numpy ijson colorama matplotlib seaborn gensim umap-learn tqdm wordcloud scikit-learn hdbscan
 # python -m spacy download en_core_web_sm
-
-import time
-from memory_profiler import profile
 
 
 def main():
@@ -34,7 +30,7 @@ def main():
 
     nlp = spacy.load("en_core_web_sm")
     ld.load_data(dir_with_corpus_files=input_path,
-                 nlp=nlp,)
+                 nlp=nlp)
 
     """
     2) create corpus

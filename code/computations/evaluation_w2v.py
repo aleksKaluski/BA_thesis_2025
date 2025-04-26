@@ -1,17 +1,15 @@
 # basic
-import os
 from pathlib import Path
 import pandas as pd
-
-# other files
-from code.preprocessing import load_data as ld
-from code.visual import visualization as vs
 
 # case-specific
 from gensim.models import Word2Vec
 import statistics
 from collections import defaultdict
 import optuna
+
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 """
 Evaluation and piccking the best word2v3c model
@@ -92,3 +90,48 @@ def get_best_params(df: pd.DataFrame, external_sim_score: str, internal_sim_scor
     return best_params
 
 
+def plot_w2v_evalutaion_results(df: pd.DataFrame, external_sim_score: str, internal_sim_score: str, model_name: str):
+    # the best model is the first one
+    df = df.sort_values(by=[external_sim_score, internal_sim_score], ascending=False)
+
+    ess = external_sim_score
+    print(f"ess: {ess}")
+    iss = internal_sim_score
+    print(f"iss: {iss}")
+    sns.set_theme(style="ticks")
+
+    plt.figure(figsize=(8, 6))
+    sns.scatterplot(data=df,
+                    x=iss,
+                    y=ess,
+                    hue=model_name,
+                    palette="hls",
+                    s=100,
+                    alpha=0.8,
+                    legend=False)
+
+    best_row = df.iloc[0]
+    second_row = df.iloc[1]
+    third_row = df.iloc[2]
+
+    rows = [best_row, second_row, third_row]
+    for row in rows:
+        plt.scatter(row[iss],
+                    row[ess],
+                    s=90,
+                    edgecolor='black',
+                    facecolor='red',
+                    linewidth=1)
+
+        plt.text(row[iss] + 0.005,
+                 row[ess] - 0.0005,
+                 f"{row[model_name]}",
+                 fontsize=9,
+                 color='black')
+
+    plt.title("Evaluation Results", fontsize=14, fontweight="bold")
+    plt.xlabel("Mean similarity score for chosen word-pairs", fontsize=12, fontweight="bold")
+    plt.ylabel("Accuracy score computed with Google test-set", fontsize=12, fontweight="bold")
+    # plt.legend(title="Model", loc='best', prop={'size': 8})
+    plt.tight_layout()
+    plt.show()

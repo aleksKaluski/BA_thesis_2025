@@ -1,38 +1,12 @@
 # basic
-import os
-from pathlib import Path
 import pandas as pd
 import numpy as np
-from numba.np.math.numbers import complex_eq_impl
-from code.computations import dim_reduction as dm
-
-# other files
-from code.visual import visualization as vs
 
 # case-specific
-from sklearn import metrics
-from sklearn.cluster import MiniBatchKMeans
-from sklearn.decomposition import PCA
-from itertools import product
+import matplotlib.pyplot as plt
 from sklearn.mixture import GaussianMixture
 from sklearn.model_selection import GridSearchCV
-
-
-def find_best_kminibatch(data: list, cluster_grid: list, batch_size_grid: list):
-    results = pd.DataFrame(columns=['n_clusters', 'batch_size', 'silhouette_score'])
-    for n, b in product(cluster_grid, batch_size_grid):
-        kmeans = MiniBatchKMeans(n_clusters=n,
-                                 random_state=0,
-                                 batch_size=b,
-                                 n_init="auto")
-
-        kmeans.fit(data)
-        k_labels = kmeans.labels_
-        silhouette_score = metrics.silhouette_score(data, k_labels, metric='euclidean')
-        results.loc[len(results)] = [n, b, silhouette_score]
-        results.sort_values(by=['silhouette_score'], ascending=False)
-    return results.iloc[0]
-
+from matplotlib.colors import LogNorm
 
 def find_best_gmm(data: pd.DataFrame, n_components: int) -> pd.DataFrame:
     def gmm_bic_score(estimator, X):
@@ -71,7 +45,7 @@ def run_best_gmm(data: pd.DataFrame, gmm_params: pd.DataFrame):
     cov_gmm = gmm_params["Type of covariance"]
     i_gmm = gmm_params["Number of iterations"]
 
-    print(f'Running best GMM model for:')
+    print(f'Running the best GMM model for:')
     print(f'number of components = {n_gmm}')
     print(f'type of covariance = {cov_gmm}')
     print(f'number of iterations = {i_gmm}')
@@ -88,3 +62,23 @@ def run_best_gmm(data: pd.DataFrame, gmm_params: pd.DataFrame):
                           verbose_interval=20
                           )
     return gmm.fit(data)
+
+
+def plot_gmm(data: pd.DataFrame, gmm_model: GaussianMixture):
+    x_principal = pd.DataFrame(data, columns=['Dim 1', 'Dim 2'])
+    x = np.linspace(-20.0, 30.0)
+    y = np.linspace(-20.0, 40.0)
+    X, Y = np.meshgrid(x, y)
+    XX = np.array([X.ravel(), Y.ravel()]).T
+    Z = -gmm_model.score_samples(XX)
+    Z = Z.reshape(X.shape)
+
+    CS = plt.contour(
+        X, Y, Z, norm=LogNorm(vmin=1.0, vmax=1000.0), levels=np.logspace(0, 3, 10)
+    )
+    CB = plt.colorbar(CS, shrink=0.8, extend="both")
+    plt.scatter(x_principal["Dim 1"], x_principal["Dim 2"], s=0.8)
+
+    plt.title("Negative log-likelihood predicted by a GMM")
+    plt.axis("tight")
+    plt.show()
