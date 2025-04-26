@@ -1,3 +1,7 @@
+from code.visual import visualization as vs
+from code.preprocessing import load_data as ld, merge_df as mf
+from code.computations import evaluation_w2v as ev, clustering as cl, dim_reduction as dm, word_clouds as wd
+
 # basic
 import os
 import pandas as pd
@@ -9,26 +13,20 @@ from gensim.models import Word2Vec
 import hdbscan
 import matplotlib.pyplot as plt
 
-from code.preprocessing import load_data as ld
-from code.preprocessing import merge_df as mf
-from code.computations import evaluation_w2v as ev
-from code.computations import dim_reduction as dm
-from code.computations import word_clouds as wd
-from code.re_clustering import minibatch_k_means as mk
-from code.re_clustering import gmms as gm
-from code.re_clustering import agglomerative_clustering as ag
-from code.re_clustering import hdbscan_clustering as hd
 
-os.chdir(r"C:/BA_thesis/BA_v2_31.03")
-print(f"working directory: {os.getcwd()}")
+# required packages: pip install spacy pandas numpy ijson colorama matplotlib seaborn gensim umap-learn tqdm wordcloud scikit-learn hdbscan
+# python -m spacy download en_core_web_sm
 
 
 def main():
+    os.chdir(r"C:/BA_thesis/BA_v2_31.03")
+
+    print(f"working directory: {os.getcwd()}")
+    input_path = os.getcwd() + '/files/corpus_data'
 
     """
     1) load the data
     """
-    input_path = os.getcwd() + '/files/corpus_data'
 
     nlp = spacy.load("en_core_web_sm")
     ld.load_data(dir_with_corpus_files=input_path,
@@ -43,9 +41,9 @@ def main():
     3) Train a few models and find the best one with optuna
     """
     ev_metric = ev.find_best_params_w2v(corpus=corpus,
-                                        n_trials=1)
+                                        n_trials=5)
 
-    ev.plot_w2v_evalutaion_results(df=ev_metric,
+    vs.plot_w2v_evalutaion_results(df=ev_metric,
                                    external_sim_score='external_accuracy',
                                    internal_sim_score='custom_sim_score',
                                    model_name='model_name')
@@ -81,17 +79,17 @@ def main():
     # extract the dimentions for reduction
     vec = dm.x_from_df(df, 'vector')
 
-    # reduce the dimentions to 2
+    # reduce the dimentions
     df = dm.reduce_dimentionality_umap(df_vectors=vec,
                                        df_normal=df,
                                        rdims=2)
+
 
     """
     5) visualize the document distance
     """
     data = df[[x for x in df.columns if x.startswith('Dim ')]]
-    wd.plot_dimentions(data=data,
-                       rdims=2)
+    vs.plot_dimentions(data)
 
     """
     6) cluster the documents
@@ -100,11 +98,11 @@ def main():
     """
     6.1) Perform mini-batch for finding the right number of clusters
     """
-    best_kminibatch = mk.find_best_kminibatch(data=data,
+    best_kminibatch = cl.find_best_kminibatch(data=data,
                                               cluster_grid=[2, 3, 4],
                                               batch_size_grid=[10, 20])
 
-    mk.plot_kminibatch(data=data,
+    vs.plot_kminibatch(data=data,
                        n_clusters=best_kminibatch['n_clusters'],
                        batch_size=best_kminibatch['batch_size'])
 
@@ -113,12 +111,10 @@ def main():
     """
 
     n = int(best_kminibatch['n_clusters'])
-    best_gmm = gm.find_best_gmm(data=data,
-                                n_components=n)
+    best_gmm = cl.find_best_gmm(data, n)
 
-    gm_model = gm.run_best_gmm(data=data, gmm_params=best_gmm)
-    gm.plot_gmm(data=data,
-                gmm_model=gm_model)
+    df = cl.run_best_gmm(data, best_gmm, df)
+    print(df.head())
 
     """
     7.3) Hierarchical clustering
@@ -130,7 +126,8 @@ def main():
                                   compute_distances=True)
 
     ac_clusters = ahc.fit(data)
-    ag.plot_dendrogram(ac_clusters, truncate_mode="level", p=3)
+    vs.plot_dendrogram(ac_clusters, truncate_mode="level", p=3)
+
 
     """
     7.4) Clustering with HDBSCAN
@@ -145,9 +142,13 @@ def main():
     hdb.single_linkage_tree_.plot(cmap='viridis', colorbar=True)
     plt.show()
 
-    hd.plot_hdbscan_points(data=data,
-                           prediction_on_data=hdb)
+    """
+    8) Plot wordclouds for each cluster
+    """
+    wd.divide_and_plot(df, "gmm_labels")
 
+    with pd.option_context('display.max_rows', 10, 'display.max_columns', None, 'display.width', 500):
+        print(df)
 
 
 if __name__ == '__main__':

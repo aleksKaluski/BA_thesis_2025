@@ -8,6 +8,7 @@ from sklearn.mixture import GaussianMixture
 from sklearn.model_selection import GridSearchCV
 from matplotlib.colors import LogNorm
 
+
 def find_best_gmm(data: pd.DataFrame, n_components: int) -> pd.DataFrame:
     def gmm_bic_score(estimator, X):
         return -estimator.bic(X)

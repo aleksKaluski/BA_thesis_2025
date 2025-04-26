@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-def plot_hdbscan_points(data: pd.DataFrame, prediction_on_data, rdims: int):
+def plot_hdbscan_points(data: pd.DataFrame, prediction_on_data):
 
     # Convert centers to a NumPy array for proper slicing
     centers = prediction_on_data.exemplars_
