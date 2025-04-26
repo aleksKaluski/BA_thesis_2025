@@ -52,15 +52,17 @@ def tag_with_spacy(doc):
     return clean_tokens, original_tokens
 
 
-def prepare_data_frame(input_path: str, nlp: spacy.Language, chunksize: int = 10):
-    assert os.path.exists(input_path)
+def prepare_data_frame(input_path: str,
+                       nlp: spacy.Language,
+                       folder_path: str = 'files/dfs'):
 
-    folder_path = 'files/dfs'
     input_path = Path(input_path)
+    assert input_path.exists(), f"Path {input_path} does not exist"
+    assert input_path.is_file(), f"Path {input_path} is not a file"
 
     if input_path.name.endswith('.json'):
 
-        print(f'Loading data from {input_path.name}')
+
         output_file_name = input_path.name.replace('.json', '')
 
         rows = []
@@ -83,48 +85,41 @@ def prepare_data_frame(input_path: str, nlp: spacy.Language, chunksize: int = 10
                 texts.append(text)
                 metadata.append((date, semantic_id, group))
 
-                if len(texts) >= chunksize:
-                    docs = nlp.pipe(texts, batch_size=10, disable=["ner", "parser"])
+                docs = nlp.pipe(texts, batch_size=10, disable=["ner", "parser", "textcat"])
 
-                    # zip for interation on docs and meta
-                    for doc, (date, semantic_id, group) in zip(docs, metadata):
-                        clean_text, original_text = tag_with_spacy(doc)
-                        for i in range(len(clean_text)):
-                            if len(clean_text[i]) > 5:
-                                rows.append({
-                                    "clean_text": clean_text[i],
-                                    "text": original_text[i],
-                                    "date": date,
-                                    "semantic_id": semantic_id,
-                                    "group": group
-                                })
+                # zip for interation on docs and meta
+                for doc, (date, semantic_id, group) in zip(docs, metadata):
+                    clean_text, original_text = tag_with_spacy(doc)
+                    for i in range(len(clean_text)):
+                        if len(clean_text[i]) > 5:
+                            rows.append({
+                                "clean_text": clean_text[i],
+                                "text": original_text[i],
+                                "date": date,
+                                "semantic_id": semantic_id,
+                                "group": group
+                            })
 
-                    df = pd.DataFrame(rows)
-                    # with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
-                    #     print(df)
-                    output_file_name = output_file_name + f'_{name_number}_prp.pkl'
-                    output_path = os.path.join(folder_path, output_file_name)
-                    print(f"Tagging done. Saving the file to {output_path}")
-                    print("-" * 50)
-                    df.to_pickle(output_path)
-
-                    name_number += 1
-                    texts = []
-                    metadata = []
-                    rows = []
-                    output_file_name = input_path.name.replace('.json', '')
+            df = pd.DataFrame(rows)
+            output_file_name = output_file_name + f'_{name_number}_prp.pkl'
+            output_path = os.path.join(folder_path, output_file_name)
+            print(f"Tagging done. Saving the file to {output_path}")
+            print("-" * 50)
+            df.to_pickle(output_path)
 
 
-def load_data(dir_with_corpus_files: str, nlp: spacy.Language, chunksize: int = 10):
+
+def load_data(dir_with_corpus_files: str, nlp: spacy.Language):
     path = Path(dir_with_corpus_files)
+
     assert path.exists(), f"Path {dir_with_corpus_files} does not exist"
     assert path.is_dir(), f"Path {dir_with_corpus_files} is not a directory"
-
+    print(f'\nLoading data from {path.name}')
     for file in os.listdir(dir_with_corpus_files):
         filename = os.fsdecode(file)
         if filename.endswith(".json"):
             directory = os.path.join(dir_with_corpus_files, filename)
-            prepare_data_frame(directory, nlp, chunksize)
+            prepare_data_frame(directory, nlp)
         else:
             print(f"Provided file {filename} is not a json file. Skipping...")
 

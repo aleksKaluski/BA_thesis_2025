@@ -34,8 +34,7 @@ def main():
 
     nlp = spacy.load("en_core_web_sm")
     ld.load_data(dir_with_corpus_files=input_path,
-                 nlp=nlp,
-                 chunksize=40)
+                 nlp=nlp,)
 
     """
     2) create corpus
