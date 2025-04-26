@@ -58,7 +58,7 @@ def divide_and_plot(df: pd.DataFrame, cluster: str):
     number_of_clusters = df[cluster].nunique()
     for i in range(number_of_clusters):
         grouped = df.groupby(df[cluster])
-        df_to_print = grouped.get_group(i)
+        df_to_print = grouped.get_group(i-1)
         cloud = ''
         for t in df_to_print['clean_text']:
             cloud += str(t).replace("'", '') + ' '

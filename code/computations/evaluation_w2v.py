@@ -64,9 +64,33 @@ def find_best_params_w2v(corpus, n_trials: int):
             sg=sg,
             vector_size=vector_size
         )
-        result = evaluate_model(w2v,
-                                ev_file='files/google.txt',
-                                test_words=[('good', 'bad'), ('game', 'theory')])
+        result = evaluate_model(
+            w2v,
+            ev_file='files/google.txt',
+            test_words=[
+                ("embodied", "cognition"),
+                ("sensorimotor", "contingencies"),
+                ("motor", "system"),
+                ("perceptual", "system"),
+                ("social", "cognition"),
+                ("situated", "cognition"),
+                ("extended", "mind"),
+                ("affordance", "perception"),
+                ("body", "environment"),
+                ("action", "perception"),
+                ("mirror", "neurons"),
+                ("memory", "recall"),
+                ("self", "regulation"),
+                ("reasoning", "problem-solving"),
+                ("language", "processing"),
+                ("motor", "skills"),
+                ("phenomenological", "experience"),
+                ("brain", "body"),
+                ("emotion", "action"),
+                ("physical", "interaction")
+            ]
+        )
+
         return result
 
     study = optuna.create_study(directions=["maximize", "maximize"],

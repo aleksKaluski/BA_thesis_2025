@@ -2,7 +2,7 @@
 import os
 from pathlib import Path
 import pandas as pd
-import numpy as np
+import re
 
 # NLP
 import spacy
@@ -56,13 +56,11 @@ def prepare_data_frame(input_path: str,
                        nlp: spacy.Language,
                        folder_path: str = 'files/dfs',
                        chunkzise: int = 100):
-
     input_path = Path(input_path)
     assert input_path.exists(), f"Path {input_path} does not exist"
     assert input_path.is_file(), f"Path {input_path} is not a file"
 
     if input_path.name.endswith('.json'):
-
 
         output_file_name = input_path.name.replace('.json', '')
 
@@ -117,14 +115,12 @@ def prepare_data_frame(input_path: str,
                                 "group": group
                             })
 
-
             df = pd.DataFrame(rows)
             output_file_name = output_file_name + f'_{name_number}_prp.pkl'
             output_path = os.path.join(folder_path, output_file_name)
             print(f"Tagging done. Saving the file to {output_path}")
             print("-" * 50)
             df.to_pickle(output_path)
-
 
 
 def load_data(dir_with_corpus_files: str, nlp: spacy.Language):
@@ -142,8 +138,14 @@ def load_data(dir_with_corpus_files: str, nlp: spacy.Language):
             print(f"Provided file {filename} is not a json file. Skipping...")
 
 
+def clean_df(dataframe: pd.DataFrame, column_name: str, phraze: str):
+    assert isinstance(dataframe, pd.DataFrame);
+    f"[clean_df] DataFrame expected, got {type(dataframe)} instead"
 
-
+    for index, row in dataframe.iterrows():
+        if not re.search(phraze, row[column_name]):
+            dataframe.drop(index, inplace=True)
+    return dataframe
 
 
 # Generator for feeding word2vec model

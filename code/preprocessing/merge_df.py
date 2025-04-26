@@ -31,12 +31,13 @@ def merge_df(dir_dfs: str) -> pd.DataFrame:
     for r in gen:
         d.append([
             r["clean_text"],
+            r["text"],
             r["semantic_id"],
             r["date"],
             r["group"]
         ])
 
-    df_full = pd.DataFrame(d, columns=["clean_text", "semantic_id", "date", "group"])
+    df_full = pd.DataFrame(d, columns=["clean_text", "text", "semantic_id", "date", "group"])
     print("Dfs merged sucesfully!")
     print('*'*50)
     return df_full
