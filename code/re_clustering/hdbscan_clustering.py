@@ -5,6 +5,8 @@ import numpy as np
 # case-specific
 import matplotlib.pyplot as plt
 import seaborn as sns
+from jupyter_server.auth import passwd
+from pandas.core.interchange.dataframe_protocol import DataFrame
 
 
 def plot_hdbscan_points(data: pd.DataFrame, prediction_on_data):
@@ -54,3 +56,7 @@ def plot_hdbscan_points(data: pd.DataFrame, prediction_on_data):
     plt.axis("equal")
     plt.tight_layout()
     plt.show()
+
+
+# def print_hdb_content(df :pd.DataFrame, *arg):
+    
