@@ -54,7 +54,8 @@ def tag_with_spacy(doc):
 
 def prepare_data_frame(input_path: str,
                        nlp: spacy.Language,
-                       folder_path: str = 'files/dfs'):
+                       folder_path: str = 'files/dfs',
+                       chunkzise: int = 100):
 
     input_path = Path(input_path)
     assert input_path.exists(), f"Path {input_path} does not exist"
@@ -84,10 +85,26 @@ def prepare_data_frame(input_path: str,
 
                 texts.append(text)
                 metadata.append((date, semantic_id, group))
+                if len(texts) >= chunkzise:
+                    docs = nlp.pipe(texts, batch_size=10, disable=["ner", "parser", "textcat"])
 
+                    # zip for interation on docs and meta
+                    for doc, (date, semantic_id, group) in zip(docs, metadata):
+                        clean_text, original_text = tag_with_spacy(doc)
+                        for i in range(len(clean_text)):
+                            if len(clean_text[i]) > 5:
+                                rows.append({
+                                    "clean_text": clean_text[i],
+                                    "text": original_text[i],
+                                    "date": date,
+                                    "semantic_id": semantic_id,
+                                    "group": group
+                                })
+                    texts = []
+                    metadata = []
+
+            if texts:
                 docs = nlp.pipe(texts, batch_size=10, disable=["ner", "parser", "textcat"])
-
-                # zip for interation on docs and meta
                 for doc, (date, semantic_id, group) in zip(docs, metadata):
                     clean_text, original_text = tag_with_spacy(doc)
                     for i in range(len(clean_text)):
@@ -99,6 +116,7 @@ def prepare_data_frame(input_path: str,
                                 "semantic_id": semantic_id,
                                 "group": group
                             })
+
 
             df = pd.DataFrame(rows)
             output_file_name = output_file_name + f'_{name_number}_prp.pkl'
@@ -122,6 +140,10 @@ def load_data(dir_with_corpus_files: str, nlp: spacy.Language):
             prepare_data_frame(directory, nlp)
         else:
             print(f"Provided file {filename} is not a json file. Skipping...")
+
+
+
+
 
 
 # Generator for feeding word2vec model

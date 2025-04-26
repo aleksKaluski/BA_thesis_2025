@@ -48,6 +48,7 @@ def evaluate_model(model: Word2Vec, ev_file: str, test_words: list):
 
 
 def find_best_params_w2v(corpus, n_trials: int):
+    assert n_trials >= 3; "Minimal number of trials is 3!"
     def train_w2v_models(trial):
         window = trial.suggest_int("window", 2, 3)
         epochs = trial.suggest_int("epochs", 100, 150)
@@ -95,9 +96,7 @@ def plot_w2v_evalutaion_results(df: pd.DataFrame, external_sim_score: str, inter
     df = df.sort_values(by=[external_sim_score, internal_sim_score], ascending=False)
 
     ess = external_sim_score
-    print(f"ess: {ess}")
     iss = internal_sim_score
-    print(f"iss: {iss}")
     sns.set_theme(style="ticks")
 
     plt.figure(figsize=(8, 6))

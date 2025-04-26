@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 
 def iter_large_df(top_dir):
-    print(f"\nIterating documents in {top_dir}...")
+    print(f"Mearging dataframe ha started. Iterating documents in {top_dir}...")
     for root, _, files in os.walk(top_dir):
         for file in files:
             if file.endswith(".pkl"):
@@ -37,5 +37,6 @@ def merge_df(dir_dfs: str) -> pd.DataFrame:
         ])
 
     df_full = pd.DataFrame(d, columns=["clean_text", "semantic_id", "date", "group"])
-    print("\nDfs merged sucesfully!")
+    print("Dfs merged sucesfully!")
+    print('*'*50)
     return df_full

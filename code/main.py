@@ -43,7 +43,8 @@ def main():
     3) Train a few models and find the best one with optuna
     """
     ev_metric = ev.find_best_params_w2v(corpus=corpus,
-                                        n_trials=1)
+                                        n_trials=3)
+
 
     ev.plot_w2v_evalutaion_results(df=ev_metric,
                                    external_sim_score='external_accuracy',
@@ -65,7 +66,8 @@ def main():
         min_count=5,
         epochs=epochs,
         sg=sg,
-        vector_size=vector_size
+        vector_size=vector_size,
+        workers=2
     )
     model.save(f"files/models/w{window}e{epochs}sg{sg}v{vector_size}_best.model")
 

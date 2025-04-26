@@ -63,7 +63,7 @@ def main():
         min_count=5,
         epochs=epochs,
         sg=sg,
-        vector_size=vector_size
+        vector_size=vector_size,
     )
     model.save(f"files/models/w{window}e{epochs}sg{sg}v{vector_size}_best.model")
 
