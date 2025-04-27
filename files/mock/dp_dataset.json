@@ -1,0 +1,1257 @@
+{
+  "labels" : {
+    "selected" : 58,
+    "candidate" : 88,
+    "arrangement" : {
+      "converged" : true,
+      "iterations" : 124,
+      "silhouetteAverage" : 0.43767208,
+      "netSimilarity" : 19.086176,
+      "pruningGain" : 0.276087,
+      "clusters" : [
+        {
+          "id" : 12,
+          "exemplar" : 12,
+          "similarity" : 0.0,
+          "silhouette" : 0.7083333,
+          "clusters" : [ ],
+          "labels" : [
+            {
+              "id" : 17,
+              "similarity" : 1.0,
+              "silhouette" : 1.0
+            },
+            {
+              "id" : 13,
+              "similarity" : 0.57500005,
+              "silhouette" : 0.36170205
+            },
+            {
+              "id" : 18,
+              "similarity" : 0.46875,
+              "silhouette" : 1.0
+            },
+            {
+              "id" : 31,
+              "similarity" : 0.3359375,
+              "silhouette" : -0.21794869
+            },
+            {
+              "id" : 35,
+              "similarity" : 0.2916667,
+              "silhouette" : 1.0
+            },
+            {
+              "id" : 41,
+              "similarity" : 0.07916668,
+              "silhouette" : 0.80952376
+            }
+          ]
+        },
+        {
+          "id" : 5,
+          "exemplar" : 5,
+          "similarity" : 0.0,
+          "silhouette" : 0.65384614,
+          "clusters" : [ ],
+          "labels" : [
+            {
+              "id" : 42,
+              "similarity" : 0.46875,
+              "silhouette" : 1.0
+            },
+            {
+              "id" : 0,
+              "similarity" : 0.46875,
+              "silhouette" : 1.0
+            }
+          ]
+        },
+        {
+          "id" : 38,
+          "exemplar" : 38,
+          "similarity" : 0.0,
+          "silhouette" : -0.7142857,
+          "clusters" : [
+            {
+              "id" : 52,
+              "exemplar" : 52,
+              "similarity" : 0.3625,
+              "silhouette" : -0.5862069,
+              "clusters" : [ ],
+              "labels" : [
+                {
+                  "id" : 7,
+                  "similarity" : 0.2916667,
+                  "silhouette" : 1.0
+                }
+              ]
+            }
+          ],
+          "labels" : [
+            {
+              "id" : 26,
+              "similarity" : 0.3359375,
+              "silhouette" : 0.55737704
+            },
+            {
+              "id" : 19,
+              "similarity" : 0.2916667,
+              "silhouette" : 1.0
+            },
+            {
+              "id" : 11,
+              "similarity" : 0.203125,
+              "silhouette" : 0.0
+            },
+            {
+              "id" : 9,
+              "similarity" : 0.203125,
+              "silhouette" : 1.0
+            },
+            {
+              "id" : 48,
+              "similarity" : 0.1875,
+              "silhouette" : 1.0
+            },
+            {
+              "id" : 29,
+              "similarity" : 0.11458334,
+              "silhouette" : 1.0
+            },
+            {
+              "id" : 1,
+              "similarity" : 0.055555556,
+              "silhouette" : 0.0
+            }
+          ]
+        },
+        {
+          "id" : 37,
+          "exemplar" : 37,
+          "similarity" : 0.0,
+          "silhouette" : -0.7192308,
+          "clusters" : [
+            {
+              "id" : 51,
+              "exemplar" : 51,
+              "similarity" : 0.11458334,
+              "silhouette" : -0.60714287,
+              "clusters" : [ ],
+              "labels" : [
+                {
+                  "id" : 45,
+                  "similarity" : 0.203125,
+                  "silhouette" : 0.0
+                }
+              ]
+            }
+          ],
+          "labels" : [
+            {
+              "id" : 30,
+              "similarity" : 0.734375,
+              "silhouette" : 0.56666666
+            },
+            {
+              "id" : 32,
+              "similarity" : 0.6458334,
+              "silhouette" : 1.0
+            },
+            {
+              "id" : 8,
+              "similarity" : 0.6458334,
+              "silhouette" : 1.0
+            },
+            {
+              "id" : 28,
+              "similarity" : 0.46875,
+              "silhouette" : 0.0
+            },
+            {
+              "id" : 49,
+              "similarity" : 0.46875,
+              "silhouette" : 1.0
+            }
+          ]
+        },
+        {
+          "id" : 23,
+          "exemplar" : 23,
+          "similarity" : 0.0,
+          "silhouette" : 0.0,
+          "clusters" : [ ],
+          "labels" : [
+            {
+              "id" : 56,
+              "similarity" : 0.46875,
+              "silhouette" : 0.0
+            }
+          ]
+        },
+        {
+          "id" : 10,
+          "exemplar" : 10,
+          "similarity" : 0.0,
+          "silhouette" : 0.8947369,
+          "clusters" : [ ],
+          "labels" : [
+            {
+              "id" : 54,
+              "similarity" : 0.22727273,
+              "silhouette" : 0.7391305
+            },
+            {
+              "id" : 44,
+              "similarity" : 0.089285724,
+              "silhouette" : 0.0
+            },
+            {
+              "id" : 47,
+              "similarity" : 0.0703125,
+              "silhouette" : 1.0
+            }
+          ]
+        },
+        {
+          "id" : 24,
+          "exemplar" : 24,
+          "similarity" : 0.0,
+          "silhouette" : 0.43589744,
+          "clusters" : [ ],
+          "labels" : [
+            {
+              "id" : 39,
+              "similarity" : 0.6458334,
+              "silhouette" : 1.0
+            },
+            {
+              "id" : 14,
+              "similarity" : 0.2916667,
+              "silhouette" : 1.0
+            }
+          ]
+        },
+        {
+          "id" : 34,
+          "exemplar" : 34,
+          "similarity" : 0.0,
+          "silhouette" : -0.2771739,
+          "clusters" : [ ],
+          "labels" : [
+            {
+              "id" : 33,
+              "similarity" : 0.6458334,
+              "silhouette" : 0.0
+            },
+            {
+              "id" : 3,
+              "similarity" : 0.6458334,
+              "silhouette" : -0.4112903
+            },
+            {
+              "id" : 50,
+              "similarity" : 0.46875,
+              "silhouette" : 1.0
+            },
+            {
+              "id" : 53,
+              "similarity" : 0.46875,
+              "silhouette" : 0.0
+            },
+            {
+              "id" : 20,
+              "similarity" : 0.46875,
+              "silhouette" : 0.0
+            },
+            {
+              "id" : 4,
+              "similarity" : 0.46875,
+              "silhouette" : 1.0
+            },
+            {
+              "id" : 25,
+              "similarity" : 0.3625,
+              "silhouette" : 0.0
+            },
+            {
+              "id" : 46,
+              "similarity" : 0.2916667,
+              "silhouette" : 0.45945945
+            }
+          ]
+        },
+        {
+          "id" : 15,
+          "exemplar" : 15,
+          "similarity" : 0.0,
+          "silhouette" : 0.0,
+          "clusters" : [ ],
+          "labels" : [
+            {
+              "id" : 57,
+              "similarity" : 1.0,
+              "silhouette" : 0.0
+            },
+            {
+              "id" : 40,
+              "similarity" : 0.734375,
+              "silhouette" : 0.0
+            },
+            {
+              "id" : 36,
+              "similarity" : 0.46875,
+              "silhouette" : 0.0
+            },
+            {
+              "id" : 21,
+              "similarity" : 0.3625,
+              "silhouette" : 0.0
+            },
+            {
+              "id" : 43,
+              "similarity" : 0.2916667,
+              "silhouette" : 0.0
+            },
+            {
+              "id" : 27,
+              "similarity" : 0.2916667,
+              "silhouette" : 0.0
+            },
+            {
+              "id" : 22,
+              "similarity" : 0.15,
+              "silhouette" : 0.0
+            }
+          ]
+        },
+        {
+          "id" : 6,
+          "exemplar" : 6,
+          "similarity" : 0.0,
+          "silhouette" : 0.8018868,
+          "clusters" : [ ],
+          "labels" : [
+            {
+              "id" : 55,
+              "similarity" : 0.57500005,
+              "silhouette" : 0.36956525
+            },
+            {
+              "id" : 16,
+              "similarity" : 0.2916667,
+              "silhouette" : 0.60714287
+            },
+            {
+              "id" : 2,
+              "similarity" : 0.2916667,
+              "silhouette" : -0.5483871
+            }
+          ]
+        }
+      ]
+    },
+    "list" : [
+      {
+        "id" : 32,
+        "text" : "autism",
+        "df" : 3,
+        "score" : 1180.833,
+        "display" : "autism",
+        "documents" : [ ]
+      },
+      {
+        "id" : 38,
+        "text" : "ecological psychology",
+        "df" : 17,
+        "score" : 982.7013,
+        "display" : "ecological psychology",
+        "documents" : [ ]
+      },
+      {
+        "id" : 39,
+        "text" : "generative model",
+        "df" : 3,
+        "score" : 947.77686,
+        "display" : "generative model",
+        "documents" : [ ]
+      },
+      {
+        "id" : 42,
+        "text" : "material culture",
+        "df" : 4,
+        "score" : 856.1159,
+        "display" : "material culture",
+        "documents" : [ ]
+      },
+      {
+        "id" : 45,
+        "text" : "motor activity",
+        "df" : 4,
+        "score" : 719.91565,
+        "display" : "motor activity",
+        "documents" : [ ]
+      },
+      {
+        "id" : 16,
+        "text" : "social cognition",
+        "df" : 12,
+        "score" : 655.67975,
+        "display" : "social cognition",
+        "documents" : [ ]
+      },
+      {
+        "id" : 55,
+        "text" : "social understanding",
+        "df" : 5,
+        "score" : 620.69916,
+        "display" : "social understanding",
+        "documents" : [ ]
+      },
+      {
+        "id" : 43,
+        "text" : "metacognitive",
+        "df" : 3,
+        "score" : 453.43985,
+        "display" : "metacognitive",
+        "documents" : [ ]
+      },
+      {
+        "id" : 33,
+        "text" : "autistic",
+        "df" : 3,
+        "score" : 377.86655,
+        "display" : "autistic",
+        "documents" : [ ]
+      },
+      {
+        "id" : 44,
+        "text" : "moral",
+        "df" : 7,
+        "score" : 346.12128,
+        "display" : "moral",
+        "documents" : [ ]
+      },
+      {
+        "id" : 36,
+        "text" : "cybersickness",
+        "df" : 2,
+        "score" : 335.75848,
+        "display" : "cybersickness",
+        "documents" : [ ]
+      },
+      {
+        "id" : 12,
+        "text" : "listeners",
+        "df" : 10,
+        "score" : 319.1807,
+        "display" : "listeners",
+        "documents" : [ ]
+      },
+      {
+        "id" : 21,
+        "text" : "virtual environment",
+        "df" : 5,
+        "score" : 317.98724,
+        "display" : "virtual environment",
+        "documents" : [ ]
+      },
+      {
+        "id" : 28,
+        "text" : "Whitehead",
+        "df" : 2,
+        "score" : 304.28113,
+        "display" : "Whitehead",
+        "documents" : [ ]
+      },
+      {
+        "id" : 50,
+        "text" : "pretend play",
+        "df" : 2,
+        "score" : 303.05002,
+        "display" : "pretend play",
+        "documents" : [ ]
+      },
+      {
+        "id" : 2,
+        "text" : "blended",
+        "df" : 3,
+        "score" : 270.80435,
+        "display" : "blended",
+        "documents" : [ ]
+      },
+      {
+        "id" : 6,
+        "text" : "embodied interaction",
+        "df" : 10,
+        "score" : 260.27258,
+        "display" : "embodied interaction",
+        "documents" : [ ]
+      },
+      {
+        "id" : 46,
+        "text" : "music",
+        "df" : 9,
+        "score" : 251.29733,
+        "display" : "music",
+        "documents" : [ ]
+      },
+      {
+        "id" : 53,
+        "text" : "sieve",
+        "df" : 2,
+        "score" : 244.8239,
+        "display" : "sieve",
+        "documents" : [ ]
+      },
+      {
+        "id" : 8,
+        "text" : "hominin",
+        "df" : 3,
+        "score" : 226.71992,
+        "display" : "hominin",
+        "documents" : [ ]
+      },
+      {
+        "id" : 15,
+        "text" : "questionnaire",
+        "df" : 6,
+        "score" : 222.10739,
+        "display" : "questionnaire",
+        "documents" : [ ]
+      },
+      {
+        "id" : 29,
+        "text" : "architectural",
+        "df" : 6,
+        "score" : 201.68373,
+        "display" : "architectural",
+        "documents" : [ ]
+      },
+      {
+        "id" : 13,
+        "text" : "musical",
+        "df" : 5,
+        "score" : 197.80873,
+        "display" : "musical",
+        "documents" : [ ]
+      },
+      {
+        "id" : 7,
+        "text" : "fictive",
+        "df" : 3,
+        "score" : 192.08215,
+        "display" : "fictive",
+        "documents" : [ ]
+      },
+      {
+        "id" : 25,
+        "text" : "Frith",
+        "df" : 5,
+        "score" : 178.84077,
+        "display" : "Frith",
+        "documents" : [ ]
+      },
+      {
+        "id" : 49,
+        "text" : "orbit",
+        "df" : 2,
+        "score" : 171.37672,
+        "display" : "orbit",
+        "documents" : [ ]
+      },
+      {
+        "id" : 40,
+        "text" : "immersive",
+        "df" : 4,
+        "score" : 168.29019,
+        "display" : "immersive",
+        "documents" : [ ]
+      },
+      {
+        "id" : 14,
+        "text" : "policy",
+        "df" : 3,
+        "score" : 166.89105,
+        "display" : "policy",
+        "documents" : [ ]
+      },
+      {
+        "id" : 57,
+        "text" : "usability",
+        "df" : 2,
+        "score" : 157.3868,
+        "display" : "usability",
+        "documents" : [ ]
+      },
+      {
+        "id" : 47,
+        "text" : "narrative",
+        "df" : 16,
+        "score" : 155.5824,
+        "display" : "narrative",
+        "documents" : [ ]
+      },
+      {
+        "id" : 10,
+        "text" : "intentionality",
+        "df" : 15,
+        "score" : 153.57092,
+        "display" : "intentionality",
+        "documents" : [ ]
+      },
+      {
+        "id" : 27,
+        "text" : "Vive",
+        "df" : 3,
+        "score" : 151.14662,
+        "display" : "Vive",
+        "documents" : [ ]
+      },
+      {
+        "id" : 51,
+        "text" : "robot",
+        "df" : 6,
+        "score" : 148.0716,
+        "display" : "robot",
+        "documents" : [ ]
+      },
+      {
+        "id" : 17,
+        "text" : "sonicated",
+        "df" : 2,
+        "score" : 132.9044,
+        "display" : "sonicated",
+        "documents" : [ ]
+      },
+      {
+        "id" : 54,
+        "text" : "skilled",
+        "df" : 11,
+        "score" : 130.03758,
+        "display" : "skilled",
+        "documents" : [ ]
+      },
+      {
+        "id" : 31,
+        "text" : "audio",
+        "df" : 8,
+        "score" : 129.11504,
+        "display" : "audio",
+        "documents" : [ ]
+      },
+      {
+        "id" : 11,
+        "text" : "learners",
+        "df" : 4,
+        "score" : 121.86531,
+        "display" : "learners",
+        "documents" : [ ]
+      },
+      {
+        "id" : 37,
+        "text" : "dynamical",
+        "df" : 16,
+        "score" : 121.388466,
+        "display" : "dynamical",
+        "documents" : [ ]
+      },
+      {
+        "id" : 19,
+        "text" : "surround",
+        "df" : 6,
+        "score" : 117.4361,
+        "display" : "surround",
+        "documents" : [ ]
+      },
+      {
+        "id" : 56,
+        "text" : "thalamus",
+        "df" : 2,
+        "score" : 115.416985,
+        "display" : "thalamus",
+        "documents" : [ ]
+      },
+      {
+        "id" : 20,
+        "text" : "timeline",
+        "df" : 2,
+        "score" : 104.92453,
+        "display" : "timeline",
+        "documents" : [ ]
+      },
+      {
+        "id" : 3,
+        "text" : "blending",
+        "df" : 3,
+        "score" : 100.76441,
+        "display" : "blending",
+        "documents" : [ ]
+      },
+      {
+        "id" : 4,
+        "text" : "compositional",
+        "df" : 2,
+        "score" : 97.92956,
+        "display" : "compositional",
+        "documents" : [ ]
+      },
+      {
+        "id" : 35,
+        "text" : "cybernetic",
+        "df" : 3,
+        "score" : 91.31775,
+        "display" : "cybernetic",
+        "documents" : [ ]
+      },
+      {
+        "id" : 9,
+        "text" : "imaging",
+        "df" : 4,
+        "score" : 89.948204,
+        "display" : "imaging",
+        "documents" : [ ]
+      },
+      {
+        "id" : 18,
+        "text" : "sounding",
+        "df" : 2,
+        "score" : 87.4371,
+        "display" : "sounding",
+        "documents" : [ ]
+      },
+      {
+        "id" : 41,
+        "text" : "interpersonal",
+        "df" : 15,
+        "score" : 86.49397,
+        "display" : "interpersonal",
+        "documents" : [ ]
+      },
+      {
+        "id" : 22,
+        "text" : "worry",
+        "df" : 5,
+        "score" : 78.58155,
+        "display" : "worry",
+        "documents" : [ ]
+      },
+      {
+        "id" : 26,
+        "text" : "Reed",
+        "df" : 8,
+        "score" : 78.39127,
+        "display" : "Reed",
+        "documents" : [ ]
+      },
+      {
+        "id" : 0,
+        "text" : "Ingold",
+        "df" : 4,
+        "score" : 78.34198,
+        "display" : "Ingold",
+        "documents" : [ ]
+      },
+      {
+        "id" : 52,
+        "text" : "selfhood",
+        "df" : 5,
+        "score" : 75.87184,
+        "display" : "selfhood",
+        "documents" : [ ]
+      },
+      {
+        "id" : 30,
+        "text" : "attractor",
+        "df" : 4,
+        "score" : 72.53887,
+        "display" : "attractor",
+        "documents" : [ ]
+      },
+      {
+        "id" : 34,
+        "text" : "creativity",
+        "df" : 11,
+        "score" : 71.114296,
+        "display" : "creativity",
+        "documents" : [ ]
+      },
+      {
+        "id" : 5,
+        "text" : "discourse",
+        "df" : 8,
+        "score" : 69.16877,
+        "display" : "discourse",
+        "documents" : [ ]
+      },
+      {
+        "id" : 48,
+        "text" : "neuroscience",
+        "df" : 17,
+        "score" : 67.96058,
+        "display" : "neuroscience",
+        "documents" : [ ]
+      },
+      {
+        "id" : 23,
+        "text" : "Edelman",
+        "df" : 5,
+        "score" : 67.742714,
+        "display" : "Edelman",
+        "documents" : [ ]
+      },
+      {
+        "id" : 24,
+        "text" : "Friston",
+        "df" : 6,
+        "score" : 63.823963,
+        "display" : "Friston",
+        "documents" : [ ]
+      },
+      {
+        "id" : 1,
+        "text" : "Umwelt",
+        "df" : 9,
+        "score" : 61.722153,
+        "display" : "Umwelt",
+        "documents" : [ ]
+      }
+    ]
+  },
+  "documents" : {
+    "inScope" : 43,
+    "totalMatches" : 43,
+    "labeled" : 43,
+    "fields" : [
+      {
+        "name" : "text",
+        "type" : "text"
+      },
+      {
+        "name" : "source",
+        "type" : "text"
+      },
+      {
+        "name" : "created",
+        "type" : "date"
+      },
+      {
+        "name" : "version",
+        "type" : "text"
+      },
+      {
+        "name" : "id",
+        "type" : "text",
+        "id" : true
+      }
+    ]
+  },
+  "status" : {
+    "status" : "AVAILABLE",
+    "elapsedMs" : 115,
+    "progress" : [
+      {
+        "task" : "Resolving selector query",
+        "status" : "SKIPPED",
+        "attributes" : [
+          {
+            "name" : "Skipped",
+            "value" : "cached"
+          }
+        ]
+      },
+      {
+        "task" : "Fetching candidate labels",
+        "status" : "SKIPPED",
+        "attributes" : [
+          {
+            "name" : "Skipped",
+            "value" : "cached"
+          }
+        ]
+      },
+      {
+        "task" : "Scoring candidate labels",
+        "status" : "SKIPPED",
+        "attributes" : [
+          {
+            "name" : "Skipped",
+            "value" : "cached"
+          }
+        ]
+      },
+      {
+        "task" : "Counting co-occurrences",
+        "status" : "DONE",
+        "progress" : 1.0,
+        "elapsedMs" : 38,
+        "attributes" : [
+          {
+            "name" : "Threads",
+            "value" : "1-4"
+          },
+          {
+            "name" : "Speed",
+            "value" : "1.53k labels/s"
+          }
+        ]
+      },
+      {
+        "task" : "Computing label similarities",
+        "status" : "DONE",
+        "progress" : 0.9827586206896551,
+        "elapsedMs" : 0,
+        "attributes" : [ ]
+      },
+      {
+        "task" : "Clustering labels",
+        "status" : "DONE",
+        "progress" : 0.062,
+        "elapsedMs" : 74,
+        "attributes" : [
+          {
+            "name" : "Similarity pruning gain",
+            "value" : "27.61%"
+          },
+          {
+            "name" : "Similarity pruning time",
+            "value" : "1ms"
+          },
+          {
+            "name" : "Similarity used",
+            "value" : "original"
+          },
+          {
+            "name" : "Iterations",
+            "value" : "124 (6.2% of max)"
+          }
+        ]
+      },
+      {
+        "task" : "Computing coverage",
+        "status" : "SKIPPED",
+        "attributes" : [
+          {
+            "name" : "Skipped",
+            "value" : "cached"
+          }
+        ]
+      }
+    ]
+  },
+  "spec" : {
+    "scope" : {
+      "limit" : "10000",
+      "selector" : {
+        "type" : "byId",
+        "ids" : [
+          4901635,
+          3565526,
+          5074629,
+          6557969,
+          7154854,
+          8154024,
+          4180191,
+          2280207,
+          588036,
+          3716872,
+          2410962,
+          162292,
+          1316890,
+          1387794,
+          7915376,
+          6180149,
+          2970508,
+          4183581,
+          4627850,
+          4997417,
+          57033,
+          5719949,
+          8024141,
+          3718068,
+          4018658,
+          7301004,
+          470225,
+          585276,
+          951282,
+          1414092,
+          5915734,
+          5921141,
+          7582352,
+          590787,
+          4289234,
+          465006,
+          3979760,
+          5086294,
+          750288,
+          2209679,
+          2304705,
+          3811048,
+          2429671
+        ]
+      }
+    },
+    "labels" : {
+      "minLabels" : 0,
+      "maxLabels" : 20000,
+      "labelCountMultiplier" : 3.5,
+      "source" : {
+        "fields" : [
+          {
+            "name" : "text$phrases",
+            "weight" : 1.0
+          }
+        ]
+      },
+      "surface" : {
+        "minWordCount" : 1,
+        "maxWordCount" : 5,
+        "minCharacterCount" : 4,
+        "minWordCharacterCountAverage" : 2.9,
+        "preferredWordCount" : 2.5,
+        "preferredWordCountDeviation" : 2.5,
+        "singleWordLabelWeightMultiplier" : 0.35,
+        "multiWordLabelPriority" : false,
+        "capitalizedLabelWeight" : 1.0,
+        "uppercaseLabelWeight" : 1.0,
+        "acronymLabelWeight" : 1.0,
+        "withEmbedding" : true,
+        "exclude" : [
+          {
+            "type" : "project",
+            "dictionary" : "default"
+          }
+        ]
+      },
+      "frequencies" : {
+        "minAbsoluteDf" : 2,
+        "minRelativeDf" : 0.0,
+        "maxRelativeDf" : 0.4,
+        "maxLabelsPerDocument" : 5,
+        "truncatedPhraseThreshold" : 0.2
+      },
+      "probabilities" : {
+        "autoStopLabelRemovalStrength" : 0.35,
+        "autoStopLabelMinCoverage" : 0.4
+      },
+      "scorers" : {
+        "tokenCountScorerWeight" : 1.0,
+        "tfScorerWeight" : 1.0,
+        "idfScorerWeight" : 1.0,
+        "completePhrasesScorerWeight" : 1.0,
+        "truncatedPhrasesScorerWeight" : 1.0,
+        "tokenCaseScorerWeight" : 1.0
+      },
+      "arrangement" : {
+        "enabled" : true,
+        "algorithm" : {
+          "type" : "ap",
+          "ap" : {
+            "maxIterations" : 2000,
+            "minSteadyIterations" : 100,
+            "threads" : "1-2",
+            "softening" : 0.3,
+            "damping" : 0.9,
+            "minPruningGain" : 0.3,
+            "inputPreference" : 0.0,
+            "preferenceInitializer" : "NONE",
+            "preferenceInitializerScaling" : 1.0
+          }
+        },
+        "relationship" : {
+          "type" : "cooccurrences",
+          "cooccurrences" : {
+            "cooccurrenceWindowSize" : 32,
+            "cooccurrenceCountingAccuracy" : 0.5,
+            "similarityWeighting" : "INCLUSION",
+            "threads" : "1-4"
+          },
+          "embeddings" : {
+            "maxSimilarLabels" : 50,
+            "minSimilarity" : 0.5,
+            "threads" : "1-4"
+          }
+        }
+      },
+      "direct" : [ ]
+    },
+    "documents" : {
+      "arrangement" : {
+        "enabled" : false,
+        "algorithm" : {
+          "type" : "ap",
+          "ap" : {
+            "maxIterations" : 2000,
+            "minSteadyIterations" : 100,
+            "threads" : "1-2",
+            "softening" : 0.3,
+            "damping" : 0.9,
+            "minPruningGain" : 0.3,
+            "inputPreference" : -0.5,
+            "addSelfSimilarityToPreference" : false
+          },
+          "maxClusterLabels" : 4,
+          "maxLabelsPerDocument" : 10
+        },
+        "relationship" : {
+          "type" : "mlt",
+          "mlt" : {
+            "maxSimilarDocuments" : 7,
+            "minDocumentLabels" : 3,
+            "maxQueryLabels" : 4,
+            "minQueryLabelOccurrences" : 1,
+            "minMatchingQueryLabels" : 4,
+            "maxScopeSizeForSubIndex" : 0.3,
+            "maxInMemorySubIndexSize" : 8000000,
+            "threads" : "1-4"
+          },
+          "embeddingCentroids" : {
+            "maxSimilarDocuments" : 16,
+            "minDocumentLabels" : 1,
+            "maxQueryLabels" : 4,
+            "minQueryLabelOccurrences" : 1,
+            "threads" : "1-4"
+          }
+        }
+      },
+      "embedding" : {
+        "enabled" : false,
+        "algorithm" : {
+          "type" : "lv",
+          "lv" : {
+            "maxIterations" : 300,
+            "negativeEdgeCount" : 5,
+            "negativeEdgeWeight" : 2.0,
+            "negativeEdgeDenominator" : 1.0,
+            "threads" : "1-4"
+          }
+        },
+        "relationship" : {
+          "type" : "embeddingCentroids",
+          "mlt" : {
+            "maxSimilarDocuments" : 7,
+            "minDocumentLabels" : 3,
+            "maxQueryLabels" : 4,
+            "minQueryLabelOccurrences" : 1,
+            "minMatchingQueryLabels" : 4,
+            "maxScopeSizeForSubIndex" : 0.3,
+            "maxInMemorySubIndexSize" : 8000000,
+            "threads" : "1-4",
+            "maxSimilarDocumentsPerLabel" : 5
+          },
+          "embeddingCentroids" : {
+            "maxSimilarDocuments" : 5,
+            "minDocumentLabels" : 1,
+            "maxQueryLabels" : 2,
+            "minQueryLabelOccurrences" : 1,
+            "threads" : "1-4",
+            "maxSimilarDocumentsPerLabel" : 5
+          }
+        }
+      }
+    },
+    "output" : {
+      "format" : "json",
+      "parameters" : { },
+      "pretty" : false,
+      "labels" : {
+        "enabled" : true,
+        "labelFormat" : "ORIGINAL",
+        "documents" : {
+          "enabled" : false,
+          "maxDocumentsPerLabel" : 10,
+          "outputScores" : false
+        }
+      },
+      "documents" : {
+        "enabled" : false,
+        "onlyWithLabels" : false,
+        "onlyAssignedToLabels" : false,
+        "labels" : {
+          "enabled" : true,
+          "maxLabelsPerDocument" : 2147483647,
+          "minLabelOccurrencesPerDocument" : 0
+        },
+        "content" : {
+          "enabled" : false,
+          "fields" : [
+            {
+              "name" : "text",
+              "maxValues" : 3,
+              "maxValueLength" : 10000000,
+              "highlighting" : {
+                "criteria" : false,
+                "scope" : false,
+                "truncationMarker" : "…",
+                "startMarker" : "⁌%s⁍",
+                "endMarker" : "⁌\\%s⁍"
+              },
+              "valueCount" : false
+            },
+            {
+              "name" : "source",
+              "maxValues" : 3,
+              "maxValueLength" : 10000000,
+              "highlighting" : {
+                "criteria" : false,
+                "scope" : false,
+                "truncationMarker" : "…",
+                "startMarker" : "⁌%s⁍",
+                "endMarker" : "⁌\\%s⁍"
+              },
+              "valueCount" : false
+            },
+            {
+              "name" : "created",
+              "maxValues" : 3,
+              "maxValueLength" : 10000000,
+              "highlighting" : {
+                "criteria" : false,
+                "scope" : false,
+                "truncationMarker" : "…",
+                "startMarker" : "⁌%s⁍",
+                "endMarker" : "⁌\\%s⁍"
+              },
+              "valueCount" : false
+            },
+            {
+              "name" : "version",
+              "maxValues" : 3,
+              "maxValueLength" : 10000000,
+              "highlighting" : {
+                "criteria" : false,
+                "scope" : false,
+                "truncationMarker" : "…",
+                "startMarker" : "⁌%s⁍",
+                "endMarker" : "⁌\\%s⁍"
+              },
+              "valueCount" : false
+            },
+            {
+              "name" : "id",
+              "maxValues" : 3,
+              "maxValueLength" : 10000000,
+              "highlighting" : {
+                "criteria" : false,
+                "scope" : false,
+                "truncationMarker" : "…",
+                "startMarker" : "⁌%s⁍",
+                "endMarker" : "⁌\\%s⁍"
+              },
+              "valueCount" : false
+            }
+          ]
+        }
+      }
+    },
+    "performance" : {
+      "threads" : "1-4"
+    },
+    "summary" : {
+      "labeledDocuments" : true
+    },
+    "debug" : {
+      "logCandidateLabelPartialScores" : false
+    }
+  }
+}

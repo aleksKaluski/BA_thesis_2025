@@ -55,7 +55,7 @@ def tag_with_spacy(doc):
 def prepare_data_frame(input_path: str,
                        nlp: spacy.Language,
                        folder_path: str = 'files/dfs',
-                       chunkzise: int = 100):
+                       chunkzise: int = 3):
     input_path = Path(input_path)
     assert input_path.exists(), f"Path {input_path} does not exist"
     assert input_path.is_file(), f"Path {input_path} is not a file"
@@ -75,10 +75,13 @@ def prepare_data_frame(input_path: str,
             print(f"Tagging {input_path.name} text with spacy has started.")
 
             for record in obj:
+                # print(record)
                 content = record["content"]
-                text = content[1]['values'][0]
-                date = content[2]['values'][0]
-                semantic_id = content[0]['values'][0]
+                content_dict = {item['name']: item['values'][0] for item in content}
+
+                text = content_dict.get('text', '')
+                date = content_dict.get('date', '')
+                semantic_id = content_dict.get('id', '')
                 group = random.choice(['psychology', 'ethics', 'philosophy'])
 
                 texts.append(text)
@@ -90,6 +93,7 @@ def prepare_data_frame(input_path: str,
                     for doc, (date, semantic_id, group) in zip(docs, metadata):
                         clean_text, original_text = tag_with_spacy(doc)
                         for i in range(len(clean_text)):
+                            # print(f"clean_text[{i}] = {clean_text[i]}")
                             if len(clean_text[i]) > 5:
                                 rows.append({
                                     "clean_text": clean_text[i],
@@ -118,6 +122,7 @@ def prepare_data_frame(input_path: str,
             df = pd.DataFrame(rows)
             output_file_name = output_file_name + f'_{name_number}_prp.pkl'
             output_path = os.path.join(folder_path, output_file_name)
+            output_path = Path(output_path)
             print(f"Tagging done. Saving the file to {output_path}")
             print("-" * 50)
             df.to_pickle(output_path)

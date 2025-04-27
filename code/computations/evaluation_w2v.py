@@ -10,6 +10,7 @@ import optuna
 
 import matplotlib.pyplot as plt
 import seaborn as sns
+import time
 
 """
 Evaluation and piccking the best word2v3c model
@@ -49,7 +50,11 @@ def evaluate_model(model: Word2Vec, ev_file: str, test_words: list):
 
 def find_best_params_w2v(corpus, n_trials: int):
     assert n_trials >= 3; "Minimal number of trials is 3!"
+    print('='*50)
+    print("Looking for best w2v model!")
+
     def train_w2v_models(trial):
+        start_time = time.time()
         window = trial.suggest_int("window", 2, 3)
         epochs = trial.suggest_int("epochs", 100, 150)
         sg = trial.suggest_int("sg", 0, 1)
@@ -64,12 +69,17 @@ def find_best_params_w2v(corpus, n_trials: int):
             sg=sg,
             vector_size=vector_size
         )
+        w2v.save(f"files/models/w{window}e{epochs}sg{sg}v{vector_size}.model")
+
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        print(f"time of training: {elapsed_time:.2f} seconds")
+
         result = evaluate_model(
             w2v,
             ev_file='files/google.txt',
             test_words=[
                 ("embodied", "cognition"),
-                ("sensorimotor", "contingencies"),
                 ("motor", "system"),
                 ("perceptual", "system"),
                 ("social", "cognition"),
@@ -81,7 +91,6 @@ def find_best_params_w2v(corpus, n_trials: int):
                 ("mirror", "neurons"),
                 ("memory", "recall"),
                 ("self", "regulation"),
-                ("reasoning", "problem-solving"),
                 ("language", "processing"),
                 ("motor", "skills"),
                 ("phenomenological", "experience"),

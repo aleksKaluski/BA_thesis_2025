@@ -29,11 +29,12 @@ def main():
     """
     1) load the data
     """
-    input_path = os.getcwd() + '/files/corpus_data'
-
-    nlp = spacy.load("en_core_web_md")
-    ld.load_data(dir_with_corpus_files=input_path,
-                 nlp=nlp)
+    # input_path = os.getcwd() + '/files/corpus_data'
+    # print(input_path)
+    #
+    # nlp = spacy.load("en_core_web_md")
+    # ld.load_data(dir_with_corpus_files=input_path,
+    #              nlp=nlp)
 
     """
     2) create corpus
@@ -44,7 +45,7 @@ def main():
     3) Train a few models and find the best one with optuna
     """
     ev_metric = ev.find_best_params_w2v(corpus=corpus,
-                                        n_trials=30)
+                                        n_trials=5)
 
     ev.plot_w2v_evalutaion_results(df=ev_metric,
                                    external_sim_score='external_accuracy',
@@ -130,6 +131,7 @@ def main():
     n = int(best_kminibatch['n_clusters'])
     best_gmm = gm.find_best_gmm(data=data,
                                 n_components=n)
+    best_kminibatch.to_pickle('files/checkpoints/best_gmm.pkl')
 
     gm_model = gm.run_best_gmm(data=data, gmm_params=best_gmm)
     gm.plot_gmm(data=data,
