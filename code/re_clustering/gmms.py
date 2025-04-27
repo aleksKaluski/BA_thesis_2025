@@ -13,11 +13,16 @@ def find_best_gmm(data: pd.DataFrame, n_components: int) -> pd.DataFrame:
     def gmm_bic_score(estimator, X):
         return -estimator.bic(X)
 
+    print('\n' + "=" * 60)
+    print("Starting Grid Search for GMM")
+    print(f"Searching number of components from 2 to {n_components + 5}...")
+
     param_grid = {
         "n_components": range(2, n_components + 5),
         "covariance_type": ["spherical", "tied", "diag", "full"],
         "max_iter": [100, 150, 200]
     }
+
     grid_search = GridSearchCV(
         GaussianMixture(), param_grid=param_grid, scoring=gmm_bic_score
     )
@@ -35,7 +40,8 @@ def find_best_gmm(data: pd.DataFrame, n_components: int) -> pd.DataFrame:
             "mean_test_score": "BIC score",
         }
     )
-    print("Resuls of grid search for GMM:")
+
+    print("Top 5 GMM configurations sorted by BIC score:")
     print(res.sort_values(by="BIC score").head().to_string(index=False))
 
     return res.iloc[0]
@@ -46,7 +52,7 @@ def run_best_gmm(data: pd.DataFrame, gmm_params: pd.DataFrame):
     cov_gmm = gmm_params["Type of covariance"]
     i_gmm = gmm_params["Number of iterations"]
 
-    print(f'Running the best GMM model for:')
+    print(f'\nRunning the best GMM model for:')
     print(f'number of components = {n_gmm}')
     print(f'type of covariance = {cov_gmm}')
     print(f'number of iterations = {i_gmm}')

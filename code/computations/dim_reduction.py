@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 import pandas as pd
 import numpy as np
-
+import time
 # case-specific
 import umap
 from sklearn.decomposition import PCA
@@ -54,7 +54,8 @@ def reduce_dimentionality_umap(df_vectors: pd.DataFrame,
                                rdims: int = 4,
                                min_dist: float = 0.01,
                                neighbors: int = 25) -> pd.DataFrame:
-    print(f"UMAP dimensionality reduction to {rdims} dimensions with '{dmeasure}' distance measure.")
+    print(f"\nUMAP dimensionality reduction to {rdims} dimensions with '{dmeasure}' distance measure.")
+    start_time = time.time()
 
     # random seed
     rs = seed
@@ -80,6 +81,9 @@ def reduce_dimentionality_umap(df_vectors: pd.DataFrame,
     del (embedded_dict)
     projected = df_normal.join(dfe)
 
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"Dimentionality reduction done in: {elapsed_time:.2f} seconds")
     return projected
 
 

@@ -38,7 +38,7 @@ def evaluate_model(model: Word2Vec, ev_file: str, test_words: list):
             similarity_score = model.wv.similarity(*test_words[x])
             similarity_scores.append(similarity_score)
         else:
-            print(f"Warning: Word {w1} or {w2} not found in the model vocabulary.")
+            print(f"Warning: Word '{w1}' or word '{w2}' not found in the model vocabulary.")
 
     if similarity_scores:
         custom_sim_score = statistics.mean(similarity_scores)
@@ -50,8 +50,8 @@ def evaluate_model(model: Word2Vec, ev_file: str, test_words: list):
 
 def find_best_params_w2v(corpus, n_trials: int):
     assert n_trials >= 3; "Minimal number of trials is 3!"
-    print('='*50)
-    print("Looking for best w2v model!")
+
+    print("\nLooking for best w2v model!")
 
     def train_w2v_models(trial):
         start_time = time.time()
@@ -59,7 +59,11 @@ def find_best_params_w2v(corpus, n_trials: int):
         epochs = trial.suggest_int("epochs", 100, 150)
         sg = trial.suggest_int("sg", 0, 1)
         vector_size = trial.suggest_int("vector_size", 100, 120)
-        print(f'\nTraining of w{window}e{epochs}sg{sg}v{vector_size} has started.')
+        model_name = f"w{window}e{epochs}sg{sg}v{vector_size}"
+
+        print("\n" + "=" * 60)
+        print(f"Starting training: {model_name}")
+        print("=" * 60)
 
         w2v = Word2Vec(
             sentences=corpus,

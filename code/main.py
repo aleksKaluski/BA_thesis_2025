@@ -1,6 +1,7 @@
 # basic
 import os
 import pandas as pd
+import time
 
 # case_specific
 import spacy
@@ -29,22 +30,30 @@ def main():
     """
     1) load the data
     """
-    # input_path = os.getcwd() + '/files/corpus_data'
-    # print(input_path)
-    #
-    # nlp = spacy.load("en_core_web_md")
-    # ld.load_data(dir_with_corpus_files=input_path,
-    #              nlp=nlp)
+    input_path = os.getcwd() + '/files/corpus_data'
+    print(input_path)
+
+    nlp = spacy.load("en_core_web_md")
+    ld.load_data(dir_with_corpus_files=input_path,
+                 nlp=nlp)
 
     """
     2) create corpus
     """
-    corpus = ld.TxtSubdirsCorpus("files/dfs")
+
+    df = mf.merge_df('files/dfs')
+
+    # save df
+    df.to_pickle('files/checkpoints/merged_df.pkl')
 
     """
     3) Train a few models and find the best one with optuna
     """
-    ev_metric = ev.find_best_params_w2v(corpus=corpus,
+
+    # pick a random number of
+    sample = df["clean_text"].sample(n=500, random_state=42).tolist()
+
+    ev_metric = ev.find_best_params_w2v(corpus=sample,
                                         n_trials=5)
 
     ev.plot_w2v_evalutaion_results(df=ev_metric,
@@ -61,6 +70,9 @@ def main():
     vector_size = best_params['params_vector_size']
     window = best_params['params_window']
 
+    corpus = ld.TxtSubdirsCorpus("files/dfs")
+    start_time = time.time()
+    print(f"\nTraining the main model. Epochs = {epochs}, sg = {sg}, vector size = {vector_size}, window = {window}")
     model = Word2Vec(
         sentences=corpus,
         window=window,
@@ -70,15 +82,14 @@ def main():
         vector_size=vector_size
     )
     model.save(f"files/models/w{window}e{epochs}sg{sg}v{vector_size}_best.model")
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"Main model trained in time: {elapsed_time:.2f} seconds")
 
     """
     4) Reduce dimentions
     """
     # model = Word2Vec.load('files/models/w3e127sg1v115_best.model')
-    df = mf.merge_df('files/dfs')
-
-    # save df
-    df.to_pickle('files/checkpoints/merged_df.pkl')
 
     # now we reduce data!
     df_clean = ld.clean_df(dataframe=df,
@@ -140,6 +151,9 @@ def main():
     """
     7.3) Hierarchical clustering
     """
+    print('\n' + "=" * 60)
+    print(f"\n Initializing Agglomerative Clustering...")
+    start_time = time.time()
 
     # AgglomerativeC clustering
     ahc = AgglomerativeClustering(n_clusters=n,
@@ -148,10 +162,16 @@ def main():
 
     ac_clusters = ahc.fit(data)
     ag.plot_dendrogram(ac_clusters, truncate_mode="level", p=3)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"Agglomerative Clustering done in time: {elapsed_time:.2f} seconds")
 
     """
     7.4) Clustering with HDBSCAN
     """
+
+    print('\n' + "=" * 60)
+    print(f"\n Initializing HDBSCAN Clustering...")
     hdb = hdbscan.HDBSCAN(min_cluster_size=30, gen_min_span_tree=True)
     hdb.fit(data)
     hdb.minimum_spanning_tree_.plot(edge_cmap='viridis',
@@ -165,14 +185,19 @@ def main():
     hd.plot_hdbscan_points(data=data,
                            prediction_on_data=hdb)
 
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"HDBSCAN Clustering done in time: {elapsed_time:.2f} seconds")
+
     df_reduced['hdbscan_labels'] = hdb.labels_
     df_reduced['hdbscan_probabilities'] = hdb.probabilities_
     df_reduced.sort_values(by=['hdbscan_probabilities'], ascending=False, inplace=True)
 
-    top = df_reduced['hdbscan_probabilities'].nlargest(n=20).index
+    top = df_reduced['hdbscan_probabilities'].nlargest(n=50).index
     top = df_reduced.loc[top]
     with pd.option_context('display.max_rows', 10, 'display.max_columns', None, 'display.width', 700):
         print(top)
+    pd.to_pickle(top, 'files/checkpoints/top.pkl')
 
     """
     8) Plot wordclouds for each cluster

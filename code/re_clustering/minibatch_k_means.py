@@ -13,6 +13,11 @@ import matplotlib.pyplot as plt
 
 
 def find_best_kminibatch(data: pd.DataFrame, cluster_grid: list, batch_size_grid: list):
+    print('\n'+"=" * 60)
+    print(f"Starting Grid Search for MiniBatchKMeans")
+    print(f"Cluster candidates: {cluster_grid}")
+    print(f"Batch size candidates: {batch_size_grid}")
+
     results = pd.DataFrame(columns=['n_clusters', 'batch_size', 'silhouette_score'])
     for n, b in product(cluster_grid, batch_size_grid):
         kmeans = MiniBatchKMeans(n_clusters=n,
@@ -25,7 +30,13 @@ def find_best_kminibatch(data: pd.DataFrame, cluster_grid: list, batch_size_grid
         silhouette_score = metrics.silhouette_score(data, k_labels, metric='euclidean')
         results.loc[len(results)] = [n, b, silhouette_score]
     results.sort_values(by=['silhouette_score'], ascending=False)
-    return results.iloc[0]
+    print("\nGrid Search completed!")
+    print("Best configuration:")
+    best_result = results.iloc[0]
+    print(f"n_clusters = {best_result['n_clusters']}")
+    print(f"batch_size = {best_result['batch_size']}")
+    print(f"silhouette_score = {best_result['silhouette_score']:.4f}")
+    return best_result
 
 
 def plot_kminibatch(data: list, n_clusters: int, batch_size: int, rdims: int = 2, colors: list = None):

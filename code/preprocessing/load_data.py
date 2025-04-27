@@ -6,7 +6,7 @@ import re
 
 # NLP
 import spacy
-
+import time
 # case-specific
 import ijson
 import random
@@ -61,24 +61,25 @@ def prepare_data_frame(input_path: str,
     assert input_path.is_file(), f"Path {input_path} is not a file"
 
     if input_path.name.endswith('.json'):
-
         output_file_name = input_path.name.replace('.json', '')
-
         rows = []
         texts = []
         metadata = []
         name_number = 0
+        doc_counter = 0  # new
 
         with open(input_path, "rb") as f:
             obj = ijson.items(f, "documents.list.item")
 
-            print(f"Tagging {input_path.name} text with spacy has started.")
+            print(Fore.CYAN + f"Starting tagging {input_path.name} with spaCy..." + Style.RESET_ALL)
 
             for record in obj:
-                # print(record)
+                doc_counter += 1
+                if doc_counter % 1000 == 0:
+                    print(Fore.GREEN + f"Processed {doc_counter} documents..." + Style.RESET_ALL)
+
                 content = record["content"]
                 content_dict = {item['name']: item['values'][0] for item in content}
-
                 text = content_dict.get('text', '')
                 date = content_dict.get('date', '')
                 semantic_id = content_dict.get('id', '')
@@ -86,14 +87,12 @@ def prepare_data_frame(input_path: str,
 
                 texts.append(text)
                 metadata.append((date, semantic_id, group))
+
                 if len(texts) >= chunkzise:
                     docs = nlp.pipe(texts, batch_size=10, disable=["ner", "parser", "textcat"])
-
-                    # zip for interation on docs and meta
                     for doc, (date, semantic_id, group) in zip(docs, metadata):
                         clean_text, original_text = tag_with_spacy(doc)
                         for i in range(len(clean_text)):
-                            # print(f"clean_text[{i}] = {clean_text[i]}")
                             if len(clean_text[i]) > 5:
                                 rows.append({
                                     "clean_text": clean_text[i],
@@ -123,7 +122,9 @@ def prepare_data_frame(input_path: str,
             output_file_name = output_file_name + f'_{name_number}_prp.pkl'
             output_path = os.path.join(folder_path, output_file_name)
             output_path = Path(output_path)
-            print(f"Tagging done. Saving the file to {output_path}")
+
+            print(Fore.CYAN + f"Tagging completed: {doc_counter} documents processed." + Style.RESET_ALL)
+            print(Fore.CYAN + f"Saving file to {output_path}..." + Style.RESET_ALL)
             print("-" * 50)
             df.to_pickle(output_path)
 
@@ -133,7 +134,7 @@ def load_data(dir_with_corpus_files: str, nlp: spacy.Language):
 
     assert path.exists(), f"Path {dir_with_corpus_files} does not exist"
     assert path.is_dir(), f"Path {dir_with_corpus_files} is not a directory"
-    print(f'\nLoading data from {path.name}')
+    print(f'\nLoading data from folder: {path.name}')
     for file in os.listdir(dir_with_corpus_files):
         filename = os.fsdecode(file)
         if filename.endswith(".json"):
@@ -144,19 +145,23 @@ def load_data(dir_with_corpus_files: str, nlp: spacy.Language):
 
 
 def clean_df(dataframe: pd.DataFrame, column_name: str, phraze: str):
-    assert isinstance(dataframe, pd.DataFrame);
-    f"[clean_df] DataFrame expected, got {type(dataframe)} instead"
+    print(f"\nRemoving rows which do not contain the phraze: '{phraze}'")
+    start_time = time.time()
+    assert isinstance(dataframe, pd.DataFrame), f"[clean_df] DataFrame expected, got {type(dataframe)} instead"
 
-    for index, row in dataframe.iterrows():
-        if not re.search(phraze, row[column_name]):
-            dataframe.drop(index, inplace=True)
-    return dataframe
+    mask = dataframe[column_name].astype(str).str.contains(phraze, regex=True, na=False)
+
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"DataFrame cleaned in time: {elapsed_time:.2f} seconds")
+    return dataframe[mask].reset_index(drop=True)
+
 
 
 # Generator for feeding word2vec model
 class TxtSubdirsCorpus(object):
     def __init__(self, pd_path):
-        print("Corpus active! Path:", pd_path, "\n")
+        print("\nCorpus active! Path:", pd_path)
         self.top_dir = pd_path
 
     def __iter__(self):
