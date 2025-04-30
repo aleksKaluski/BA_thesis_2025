@@ -29,7 +29,7 @@ This repository contains a complete pipeline for processing, embedding, and clus
 
 6) Visualize the contents of individual clusters using word clouds.
 
-DISCLAIMER: not all the sources of code are inlncluded here (work in progress)
+DISCLAIMER: not all the sources of code are included here (work in progress)
 
 **Sources**
 * https://github.com/JonasTriki/masters-thesis-ml/tree/master
