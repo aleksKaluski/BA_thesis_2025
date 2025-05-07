@@ -17,19 +17,8 @@ os.chdir(r"C:/BA_thesis/BA_v2_31.03")
 print(f"working directory: {os.getcwd()}")
 input_path = os.getcwd() + '/files/mock'
 print(input_path)
-#
-#
-# nlp = spacy.load("en_core_web_md")
-# ld.load_data(dir_with_corpus_files=input_path,
-#              nlp=nlp)
-#
-# """
-# 2) create corpus
-# """
-# corpus = ld.TxtSubdirsCorpus("files/dfs")
 
-df = pd.read_pickle('files/checkpoints/merged_df.pkl')
-print(df)
-print(df.info())
-sample = df["clean_text"].sample(n=500, random_state=42).tolist()
-print(sample)
+
+nlp = spacy.load("en_core_web_md")
+ld.load_data(dir_with_corpus_files=input_path,
+             nlp=nlp)

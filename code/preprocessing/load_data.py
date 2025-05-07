@@ -71,12 +71,12 @@ def prepare_data_frame(input_path: str,
         with open(input_path, "rb") as f:
             obj = ijson.items(f, "documents.list.item")
 
-            print(Fore.CYAN + f"Starting tagging {input_path.name} with spaCy..." + Style.RESET_ALL)
+            print(f"Starting tagging {input_path.name} with spaCy...")
 
             for record in obj:
                 doc_counter += 1
-                if doc_counter % 1000 == 0:
-                    print(Fore.GREEN + f"Processed {doc_counter} documents..." + Style.RESET_ALL)
+                if doc_counter % 300 == 0:
+                    print(f"Processed {doc_counter} documents...")
 
                 content = record["content"]
                 content_dict = {item['name']: item['values'][0] for item in content}
@@ -89,7 +89,7 @@ def prepare_data_frame(input_path: str,
                 metadata.append((date, semantic_id, group))
 
                 if len(texts) >= chunkzise:
-                    docs = nlp.pipe(texts, batch_size=10, disable=["ner", "parser", "textcat"])
+                    docs = nlp.pipe(texts, batch_size=200, disable=["ner", "parser", "textcat"])
                     for doc, (date, semantic_id, group) in zip(docs, metadata):
                         clean_text, original_text = tag_with_spacy(doc)
                         for i in range(len(clean_text)):
@@ -105,7 +105,7 @@ def prepare_data_frame(input_path: str,
                     metadata = []
 
             if texts:
-                docs = nlp.pipe(texts, batch_size=10, disable=["ner", "parser", "textcat"])
+                docs = nlp.pipe(texts, batch_size=200, disable=["ner", "parser", "textcat"])
                 for doc, (date, semantic_id, group) in zip(docs, metadata):
                     clean_text, original_text = tag_with_spacy(doc)
                     for i in range(len(clean_text)):
@@ -123,8 +123,8 @@ def prepare_data_frame(input_path: str,
             output_path = os.path.join(folder_path, output_file_name)
             output_path = Path(output_path)
 
-            print(Fore.CYAN + f"Tagging completed: {doc_counter} documents processed." + Style.RESET_ALL)
-            print(Fore.CYAN + f"Saving file to {output_path}..." + Style.RESET_ALL)
+            print(f"Tagging completed: {doc_counter} documents processed.")
+            print(f"Saving file to {output_path}...")
             print("-" * 50)
             df.to_pickle(output_path)
 

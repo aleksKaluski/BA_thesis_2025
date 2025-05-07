@@ -5,6 +5,7 @@ import time
 
 # case_specific
 import spacy
+from pandas import read_pickle
 from sklearn.cluster import AgglomerativeClustering
 from gensim.models import Word2Vec
 import hdbscan
@@ -20,6 +21,7 @@ from code.re_clustering import gmms as gm
 from code.re_clustering import agglomerative_clustering as ag
 from code.re_clustering import hdbscan_clustering as hd
 
+
 os.chdir(r"C:/BA_thesis/BA_v2_31.03")
 print(f"working directory: {os.getcwd()}")
 
@@ -30,7 +32,7 @@ def main():
     """
     1) load the data
     """
-    input_path = os.getcwd() + '/files/corpus_data'
+    input_path = os.getcwd() + '/files/mock'
     print(input_path)
 
     nlp = spacy.load("en_core_web_md")
@@ -54,7 +56,7 @@ def main():
     sample = df["clean_text"].sample(n=500, random_state=42).tolist()
 
     ev_metric = ev.find_best_params_w2v(corpus=sample,
-                                        n_trials=5)
+                                        n_trials=7)
 
     ev.plot_w2v_evalutaion_results(df=ev_metric,
                                    external_sim_score='external_accuracy',
@@ -73,6 +75,7 @@ def main():
     corpus = ld.TxtSubdirsCorpus("files/dfs")
     start_time = time.time()
     print(f"\nTraining the main model. Epochs = {epochs}, sg = {sg}, vector size = {vector_size}, window = {window}")
+
     model = Word2Vec(
         sentences=corpus,
         window=window,
@@ -89,13 +92,16 @@ def main():
     """
     4) Reduce dimentions
     """
-    # model = Word2Vec.load('files/models/w3e127sg1v115_best.model')
+    # model = Word2Vec.load('files/models/w3e135sg1v111_big.model')
+    # df = read_pickle('files/checkpoints/merged_fin_df.pkl')
+    # print(df.info())
 
     # now we reduce data!
     df_clean = ld.clean_df(dataframe=df,
                            column_name='text',
-                           phraze='language ')
+                           phraze=r'\bdirect\s+perception\b')
 
+    print(df_clean.info())
     # add vector represenation to each text
     dm.add_document_vector(df_clean, model)
 
@@ -169,10 +175,14 @@ def main():
     """
     7.4) Clustering with HDBSCAN
     """
+    df_reduced = pd.read_pickle('files/checkpoints/rediuced_df.pkl')
+    data = df_reduced[[x for x in df_reduced.columns if x.startswith('Dim ')]]
+    start_time = time.time()
 
     print('\n' + "=" * 60)
     print(f"\n Initializing HDBSCAN Clustering...")
-    hdb = hdbscan.HDBSCAN(min_cluster_size=30, gen_min_span_tree=True)
+    hdb = hdbscan.HDBSCAN(min_cluster_size=30,
+                          gen_min_span_tree=True)
     hdb.fit(data)
     hdb.minimum_spanning_tree_.plot(edge_cmap='viridis',
                                     edge_alpha=0.6,
@@ -189,15 +199,23 @@ def main():
     elapsed_time = end_time - start_time
     print(f"HDBSCAN Clustering done in time: {elapsed_time:.2f} seconds")
 
+
+    """
+    Select important points.
+    """
     df_reduced['hdbscan_labels'] = hdb.labels_
     df_reduced['hdbscan_probabilities'] = hdb.probabilities_
-    df_reduced.sort_values(by=['hdbscan_probabilities'], ascending=False, inplace=True)
+    df_reduced['outlier_scores_'] = hdb.outlier_scores_
+    df_reduced['importance_measure'] = df_reduced['hdbscan_probabilities'] - df_reduced['outlier_scores_']
 
-    top = df_reduced['hdbscan_probabilities'].nlargest(n=50).index
-    top = df_reduced.loc[top]
-    with pd.option_context('display.max_rows', 10, 'display.max_columns', None, 'display.width', 700):
-        print(top)
-    pd.to_pickle(top, 'files/checkpoints/top.pkl')
+    top_per_group = (
+        df_reduced
+        .sort_values(by='importance_measure', ascending=False)
+        .groupby('hdbscan_labels')
+        .head(10)
+    )
+
+    pd.to_pickle(top_per_group, 'files/checkpoints/top.pkl')
 
     """
     8) Plot wordclouds for each cluster
@@ -208,3 +226,36 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

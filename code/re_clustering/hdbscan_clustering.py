@@ -5,6 +5,7 @@ import numpy as np
 # case-specific
 import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib.patches as mpatches
 from jupyter_server.auth import passwd
 from pandas.core.interchange.dataframe_protocol import DataFrame
 
@@ -39,6 +40,7 @@ def plot_hdbscan_points(data: pd.DataFrame, prediction_on_data):
                 s=30
                 )
 
+    # plot cluster centers
     for i, cluster in enumerate(centers):
         color = color_palette[i]
         plt.scatter(cluster[:, 0],
@@ -49,8 +51,16 @@ def plot_hdbscan_points(data: pd.DataFrame, prediction_on_data):
                     edgecolors='red',
                     linewidths=0.3,
                     s=40)
-        i += 1
-    plt.title("title", fontsize=14, fontweight="bold")
+
+    # add legend manually
+    legend_patches = []
+    for idx, color in enumerate(color_palette):
+        legend_patches.append(mpatches.Patch(color=color, label=f'Cluster {idx}'))
+    if -1 in labels:
+        legend_patches.append(mpatches.Patch(color=(0.5, 0.5, 0.5), label='Noise'))
+    plt.legend(handles=legend_patches, title="Clusters")
+
+    plt.title("The notion of 'direct perception' (HDBSCAN)", fontsize=14, fontweight="bold")
     plt.xlabel("Dimention no.1", fontsize=12, fontweight="bold")
     plt.ylabel("Dimention no.2", fontsize=12, fontweight="bold")
     plt.axis("equal")
